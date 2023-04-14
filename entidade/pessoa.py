@@ -15,7 +15,7 @@ class Pessoa(ABC):
 
     @nome.setter
     def nome(self, nome: str):
-        if isinstance(nome, Pessoa) or nome is not None:
+        if isinstance(nome, Pessoa) and nome is not None:
             self.__nome = nome
 
     @property
