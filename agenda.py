@@ -50,11 +50,14 @@ class Agenda:
     def agenda(self):
         return self.__agenda
 
-    def agenda(self, consulta: Consulta):
+    def agenda(self, consulta: Consulta, aux: bool):
         if isinstance(consulta, Consulta):
             for i in self.__agenda:
                 if(i == consulta):
-                    self.__agenda.remove(consulta)
-                    return f"{consulta} consulta removida da agenda"
+                    if(aux is False):
+                        self.__agenda.remove(consulta)
+                        return f"{consulta} consulta removida da agenda"
+                    else:
+                        return f"consulta duplicada"
             self.__agenda.append(consulta)
             return f"{consulta} consulta adicionada a agenda"
