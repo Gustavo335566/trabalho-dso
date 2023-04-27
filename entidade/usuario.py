@@ -36,11 +36,12 @@ class Usuario(Pessoa, Agenda):
     def historico_medico(self):
         return self.__hitorico_medico
 
-    def historico_medico(self, consulta: Consulta):
+    def historico_medico(self, consulta: Consulta, aux: bool):
         if isinstance(consulta, Consulta):
             for i in self.__hitorico_medico:
-                if(i == consulta):
+                if(i == consulta and aux is True):
                     self.__hitorico_medico.remove(consulta)
                     return f"{consulta} removida"
-            self.__hitorico_medico.append(consulta)
-            return f"{consulta} adicionada"
+                elif(aux is False and i != consulta):
+                    self.__hitorico_medico.append(consulta)
+                    return f"{consulta} adicionada"
