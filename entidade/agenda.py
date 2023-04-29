@@ -5,11 +5,11 @@ class Agenda:
                 hora_intervalo_saida: int, hora_de_saida: int):
         if isinstance(hora_de_entrada, int) and isinstance(hora_intervalo_entrada, int)\
                 and isinstance(hora_intervalo_saida, int) and isinstance(hora_de_saida, int):
-            self.__hora_de_entrada = hora_de_entrada
+            '''self.__hora_de_entrada = hora_de_entrada
             self.__hora_intervalo_entrada = hora_intervalo_entrada
             self.__hora_intervalo_saida = hora_intervalo_saida
-            self.__hora_de_saida = hora_de_saida
-            self.__agenda = []
+            self.__hora_de_saida = hora_de_saida'''
+            self.__agenda = [] #um nome melhor para isso ex slots disponiveis
 
     @property
     def hora_de_entrada(self):
@@ -50,14 +50,15 @@ class Agenda:
     def agenda(self):
         return self.__agenda
 
-    def agenda(self, consulta: Consulta, aux: bool):
+    def agenda(self, consulta: Consulta, adicionar: bool): #pensar num nome melhor
         if isinstance(consulta, Consulta):
             for i in self.__agenda:
                 if(i == consulta):
-                    if(aux is False):
+                    if not adicionar:
                         self.__agenda.remove(consulta)
                         return f"{consulta} consulta removida da agenda"
                     else:
                         return f"consulta duplicada"
-            self.__agenda.append(consulta)
-            return f"{consulta} consulta adicionada a agenda"
+            if adicionar:
+                self.__agenda.append(consulta)
+                return f"{consulta} consulta adicionada a agenda"
