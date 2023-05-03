@@ -1,64 +1,25 @@
 
 
 class Agenda:
-    def __int__(self, hora_de_entrada: int, hora_intervalo_entrada: int,
-                hora_intervalo_saida: int, hora_de_saida: int):
-        if isinstance(hora_de_entrada, int) and isinstance(hora_intervalo_entrada, int)\
-                and isinstance(hora_intervalo_saida, int) and isinstance(hora_de_saida, int):
-            '''self.__hora_de_entrada = hora_de_entrada
-            self.__hora_intervalo_entrada = hora_intervalo_entrada
-            self.__hora_intervalo_saida = hora_intervalo_saida
-            self.__hora_de_saida = hora_de_saida'''
-            self.__agenda = [] #um nome melhor para isso ex slots disponiveis
+    def __int__(self):
+            self.__minhas_consultas = [] #um nome melhor para isso ex slots disponiveis
 
     @property
-    def hora_de_entrada(self):
-        return self.__hora_de_entrada
+    def minhas_consultas(self):
+        return self.__minhas_consultas
 
-    @hora_de_entrada.setter
-    def hora_de_entrada(self, hora_de_entrada: int):
-        if isinstance(hora_de_entrada, int):
-            self.__hora_de_entrada = hora_de_entrada
-
-    @property
-    def hora_intervalo_entrada(self):
-        return self.__hora_intervalo_entrada
-
-    @hora_intervalo_entrada.setter
-    def hora_intervalo_entrada(self, hora_intervalo_entrada: int):
-        if isinstance(hora_intervalo_entrada, int):
-            self.__hora_intervalo_entrada = hora_intervalo_entrada
-
-    @property
-    def hora_intervalo_saida(self):
-        return self.__hora_intervalo_saida
-
-    @hora_intervalo_saida.setter
-    def hora_intervalo_saida(self, hora_intervalo_saida: int):
-        if isinstance(hora_intervalo_saida, int):
-            self.__hora_intervalo_saida = hora_intervalo_saida
-
-    @property
-    def hora_de_saida(self):
-        return self.__hora_de_saida
-
-    def hora_de_saida(self, hora_de_saida: int):
-        if isinstance(hora_de_saida, int):
-            self.__hora_de_saida = hora_de_saida
-
-    @property
-    def agenda(self):
-        return self.__agenda
-
-    def agenda(self, consulta: Consulta, adicionar: bool): #pensar num nome melhor
+    def add_minhas_consultas(self, consulta: Consulta): #pensar num nome melhor
         if isinstance(consulta, Consulta):
-            for i in self.__agenda:
+            for i in self.__minhas_consultas():
                 if(i == consulta):
-                    if not adicionar:
-                        self.__agenda.remove(consulta)
-                        return f"{consulta} consulta removida da agenda"
-                    else:
-                        return f"consulta duplicada"
-            if adicionar:
-                self.__agenda.append(consulta)
-                return f"{consulta} consulta adicionada a agenda"
+                    return "Consulta duplicada" \
+            self.__minhas_consultas.append(consulta)
+            return f"Consulta adicionada a lista"
+
+    def delete_minhas_consultas(self, consulta: Consulta):
+        if isinstance(consulta, Consulta):
+            for i in self.__minhas_consultas:
+                if(i == consulta):
+                    self.__minhas_consultas.remove(consulta)
+                    return "Consulta removida"
+            return "Consulta nao esta na lista de minhas consultas"
