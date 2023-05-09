@@ -9,7 +9,7 @@ class TelaPrincipal:
         print("******* SISTEMA MÉDICO *******")
         print("*"*30)
         print("1 - Clientes")
-        print("2 - Consultas")
+        print("2 - Agenda")
         print("0 - Sair")
         opcao = int(input("Opção: "))
         return opcao
