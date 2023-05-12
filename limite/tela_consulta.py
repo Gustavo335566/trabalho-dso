@@ -6,21 +6,23 @@ class TelaConsulta:
 
     def pega_dados_consulta(self):
         print("******** DADOS DA CONSULTA ********")
-        codigo = input("Código da Consulta")
+        codigo = 1000
         cpf = input("CPF do Cliente: ")
         data = input("Data da Consulta")
+        horario = input("Horario Consulta")
+        codigo += 1
+        return {"codigo": codigo, "cpf": cpf, "data": data, "horario": horario}
 
-        return {"codigo": codigo, "cpf": cpf, "data": data}
 
     def mostra_dados_consulta(self, dados_consulta: dict):
-        print("Código da Consulta:", dados_consulta["codigo"])
-        print("Cliente da Consulta:", dados_consulta["nome_cliente"])
-        print("CPF do Cliente:", dados_consulta["cpf_cliente"])
-        print("Data da Consulta:", dados_consulta["data"])
+        print("CÓD:", dados_consulta["codigo"], end=" | ")
+        print("Nome:", dados_consulta["cliente"].nome, end=" | ")
+        print("CPF:", dados_consulta["cliente"].cpf, end=" | ")
+        print("DATA:", dados_consulta["data"])
         print("\n")
 
     def seleciona_consulta(self):
-        codigo = input("Código da consulta que deseja selecionar: ")
+        codigo = int(input("Código da consulta que deseja selecionar: "))
         return codigo
 
     def lista_opcoes(self):
