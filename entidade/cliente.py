@@ -14,5 +14,8 @@ class Cliente(Pessoa):
     def historico(self, historico):
         self.__historico = historico
 
+    def atualiza_atributo(self, atributo, valor):
+        setattr(self, atributo, valor)
+
     def __str__(self):
         return f"Cliente {self.nome} com CPF {self.cpf}"

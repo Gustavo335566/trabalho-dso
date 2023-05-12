@@ -5,30 +5,33 @@ from limite.tela_consulta import TelaConsulta
 
 class ControladorConsulta:
     def __init__(self, controlador_principal):
-        self.__controlador_cliente = ControladorClientes(self)
         self.__controlador_principal = controlador_principal
         self.__consultas = []
         self.__tela_consulta = TelaConsulta(self)
+        #ADICIONAR CONSULTA AO HISTORICO
+
+    def pega_codigo_por_cliente(self, cliente):
+        for consulta in self.__consultas:
+            if consulta.cliente == cliente:
+                return consulta.codigo
+        return "CLIENTE NAO POSSUI CONSULTA"
 
     def pega_consulta_por_codigo(self, codigo: int):
         for consulta in self.__consultas:
             if consulta.codigo == codigo:
                 return consulta
-        return None
+        return "CONSULTA NAO EXISTENTE"
 
     def cadastrar_consulta(self):
         existe_cliente = False
         existe = False
         dados_consulta = self.__tela_consulta.pega_dados_consulta()
-        cliente = ControladorClientes.pega_cliente_por_cpf(self.__controlador_cliente, dados_consulta["cpf"])
-        for cl in self.__controlador_cliente.clientes:
+        cliente = ControladorClientes.pega_cliente_por_cpf(self.__controlador_principal.controlador_cliente, dados_consulta["cpf"])
+        for cl in self.__controlador_principal.controlador_cliente.clientes:
             if cliente == cl:
-                print("aqui")
                 existe_cliente = True
-        if not existe_cliente:
-            self.__tela_consulta.mostra_mensagem("\nCPF NÃO CADASTRADO!!!")
-            input()
-        else:
+            print(cliente)
+        if existe_cliente:
             for consulta in self.__consultas:
                 if dados_consulta["data"] is not None:
                     existe = True

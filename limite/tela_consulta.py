@@ -8,10 +8,12 @@ class TelaConsulta:
         print("******** DADOS DA CONSULTA ********")
         codigo = 1000
         cpf = input("CPF do Cliente: ")
-        data = input("Data da Consulta")
+        datas_consulta = {1: "segunda", 2: "terça", 3: "quarta", 4: "quinta", 5: "sexta"}
+        print("1: Segunda\n2: Terça\n3: Quarta\n4: Quinta\n5: Sexta")
+        data = int(input("Data da Consulta"))
         horario = input("Horario Consulta")
         codigo += 1
-        return {"codigo": codigo, "cpf": cpf, "data": data, "horario": horario}
+        return {"codigo": codigo, "cpf": cpf, "data": datas_consulta[data], "horario": horario}
 
 
     def mostra_dados_consulta(self, dados_consulta: dict):

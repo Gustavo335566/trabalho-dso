@@ -6,7 +6,11 @@ class TelaCliente:
 
     def pega_dados_cliente(self):
         print("****** CADASTRO CLIENTE ******")
-        nome = input("Nome: ")
+        while True:
+            nome = input("Nome: ").title()
+            nome_comprimido = nome.replace(" ", "")
+            if nome_comprimido.isalpha():
+                break
         cpf = input("CPF: ")
         telefone = input("Telefone: ")
         sexo = input("Sexo [M/F]: ")

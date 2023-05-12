@@ -6,8 +6,9 @@ from controle.validate_dados import *
 class ControladorClientes:
     def __init__(self, controlador_principal):
         self.__controlador_principal = controlador_principal
-        self.__clientes = [Cliente("nome", "13539399950", "4832858585", "M")]
+        self.__clientes = []
         self.__tela_clientes = TelaCliente(self)
+        #ARRUMAR FUNÇÃO DE HISTORICO
 
     @property
     def clientes(self):
@@ -17,7 +18,7 @@ class ControladorClientes:
         for cliente in self.__clientes:
             if cliente.cpf == cpf:
                 return cliente
-        return None
+        return "CPF NAO CADASTRADO"
 
     def incluir_cliente(self):
         dados_cliente = self.__tela_clientes.pega_dados_cliente()
@@ -27,7 +28,6 @@ class ControladorClientes:
                 return None
         cliente = Cliente(dados_cliente["nome"], dados_cliente["cpf"],
                           dados_cliente["telefone"], dados_cliente["sexo"])
-        print(cliente.__dict__)
         for var, att in cliente.__dict__.items():
             if att is None:
                 self.__tela_clientes.mostra_mensagem(f"VALOR DE {var.upper()} INVÁLIDO")
@@ -35,6 +35,7 @@ class ControladorClientes:
                 return None
         self.__clientes.append(cliente)
         self.__tela_clientes.mostra_mensagem(f"{cliente} cadastrado com sucesso!")
+
 
     def lista_clientes(self):
         for cliente in self.__clientes:
@@ -47,20 +48,20 @@ class ControladorClientes:
         cliente = self.pega_cliente_por_cpf(cpf_cliente)
 
         if cliente is not None and isinstance(cliente, Cliente):
-            valores = {"nome": cliente.nome, "cpf": cliente.cpf, "telefone": cliente.telefone, "sexo": cliente.sexo, 0: self.retornar}
-            valores_lista = list(valores.keys())
-            print(valores_lista)
+            valores = {1: "nome", 2: "cpf", 3: "telefone", 4: "sexo", 0: self.retornar}
+            valores_lista = ["1 - Nome", "2 - CPF", "3 - Telefone", "4 - Sexo", "0 - Voltar"]
+            for valor in valores_lista:
+                self.__tela_clientes.mostra_mensagem(valor)
 
-            for key, value in valores:
-                valor = self.__tela_clientes.pega_valor()
-                if valor == 0:
-                    value()
-                elif valor == valores_lista.index(value):
-                    self.__tela_clientes.mostra_mensagem(key)
-                    cliente.key = self.__tela_clientes.pega_novo_valor()
+            while True:
+                valor_escolhido = self.__tela_clientes.pega_valor()
+                valor = valores[valor_escolhido]
+                print(valor)
+                if not isinstance(valor, str):
+                    break
+                novo_valor = self.__tela_clientes.pega_novo_valor()
+                cliente.atualiza_atributo(valor, novo_valor)
                 self.__tela_clientes.mostra_mensagem(cliente.nome)
-                #USAR WHILE, {"nome": nome}, settar valor
-
 
     def exclui_cliente(self):
         self.lista_clientes()

@@ -4,6 +4,9 @@ class TelaPrincipal:
     def __init__(self, controlador_principal):
         self.__controlador_principal = controlador_principal
 
+    def entrada_usuario(self):
+        pass
+
     def lista_opcoes(self):
         print("*"*30)
         print("******* SISTEMA MÉDICO *******")
