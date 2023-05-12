@@ -1,16 +1,12 @@
 from limite.tela_principal import TelaPrincipal
 from controle.controlador_cliente import ControladorClientes
 from controle.controlador_consulta import ControladorConsulta
-# from controle.controlador_agenda import ControladorAgenda
-# from controle.controlador_usuario import ControladorUsuario
 
 
 class ControladorPrincipal:
     def __init__(self):
         self.__controlador_cliente = ControladorClientes(self)
         self.__controlador_consulta = ControladorConsulta(self)
-        # self.__controlador_usuario = ControladorUsuario(self)
-        # self.__controlador_agenda = ControladorAgenda(self)
         self.__tela_principal = TelaPrincipal(self)
 
     @property
