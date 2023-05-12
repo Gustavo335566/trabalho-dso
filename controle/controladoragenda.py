@@ -2,7 +2,7 @@ from entidade.agenda import Agenda
 from limite.tela_agenda import Tela_Agenda
 from controle.controlador_consulta import ControladorConsulta
 from controle.controlador_cliente import ControladorClientes
-class Controlador_Agenda(Agenda, Tela_Agenda, ControladorPrincipal, ControladorConsulta, ControladorClientes):
+class ControladorAgenda(Agenda, Tela_Agenda, ControladorPrincipal, ControladorConsulta, ControladorClientes):
     def __init__(self, controlador_principal: ControladorPrincipal):
         self.__controlador_principal = controlador_principal
         self.__tela_agenda = Tela_Agenda()

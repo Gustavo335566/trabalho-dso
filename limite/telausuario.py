@@ -1,7 +1,7 @@
 from keyword import iskeyword
 
 
-class Tela_usuario():
+class TelaUsuario():
     def tela_opcoes(self):
         print("------USUARIO--------")
         print("1 - Agenda")

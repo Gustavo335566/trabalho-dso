@@ -1,36 +1,42 @@
 from entidade.usuario import Usuario
 from entidade.agenda import Agenda
-from limite.tela_usuario import Tela_usuario
-from controle.controlador_agenda import Controlador_Agenda
-from controle.controlador_cliente import  ControladorClientes
+from controle.controladoragenda import ControladorAgenda
+from controle.controlador_cliente import ControladorClientes
 from controle.controlador_consulta import ControladorConsulta
-from limite.tela_usuario import Tela_usuario
-class Controlador_usuario(Usuario, Agenda, Tela_usuario, Controlador_Agenda, ControladorClientes, ControladorConsulta):
+from limite.telausuario import TelaUsuario
+class ControladorUsuario(Usuario, Agenda, TelaUsuario, ControladorAgenda, ControladorClientes, ControladorConsulta):
     def __init__(self, controlador_principal):
         self.__usuarios = []
-        self.__tela_usuario = Tela_usuario()
+        self.__tela_usuario = TelaUsuario()
         self.__controlador_principal = ControladorPrincipal
 
     def cadastro_usuario(self):
-        nome, nome_usuario, cpf, senha_usuario, sexo, telefone, tempo_consulta, preco_consulta = Tela_usuario.pega_dados_usuario()
+        nome, nome_usuario, cpf, senha_usuario, sexo, telefone, tempo_consulta, preco_consulta = TelaUsuario.pega_dados_usuario()
         usuario = Usuario(nome, nome_usuario, cpf, senha_usuario, sexo, telefone, tempo_consulta, preco_consulta)
         self.__usuarios.append(usuario)
         mensagem = "cadastro realizado com sucesso"
-        Tela_usuario.mostra_mensagem(mensagem)
+        TelaUsuario.mostra_mensagem(mensagem)
 
     def finalizar(self):
         exit(0)
     def busca_usuario_nome_senha(self, nome_usuario, senha_usuario):
+        existe = True
         for usuario in self.todos_usuarios:
             if(nome_usuario == usuario.nome_usuario and senha_usuario == usuario.senha_usuario):
+                existe = False
                 self.menu_usuario(usuario)
+            elif(nome_usuario == usuario.nome_usuario or senha_usuario == usuario.senha_usuario):
+                TelaUsuario.mostra_mensagem("Usuario ou senha incorretos")
+                existe = False
+        if(existe):
+                TelaUsuario.mostra_mensagem("usuario nao existe")
 
     @property
     def todos_usuarios(self):
         return self.__usuarios
 
     def exclui_meu_usuario(self, usuario: Usuario):
-        palavra = Tela_usuario.palavra_chave()
+        palavra = TelaUsuario.palavra_chave()
         if palavra == "adm123":
             for i in self.__usuarios:
                 if(usuario == i):
@@ -47,7 +53,7 @@ class Controlador_usuario(Usuario, Agenda, Tela_usuario, Controlador_Agenda, Con
                     3: self.__controlador_principal.controlador_consulta.mostra_menu_consulta(usuario.agenda.minhas_consultas), 4: self.consulta_feita, 5:self.alterar_dados_usuario,
                     6: self.cadastro_usuario(), 7: self.exclui_meu_usuario(usuario)}
         while True:
-            opcao = Tela_usuario.tela_opcoes()
+            opcao = TelaUsuario.tela_opcoes()
             funcao_escolhida = switcher[opcao]
             funcao_escolhida()
 
