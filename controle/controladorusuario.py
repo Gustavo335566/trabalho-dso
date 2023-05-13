@@ -8,12 +8,19 @@ from limite.telausuario import TelaUsuario
 
 class ControladorUsuario:
     def __init__(self, controlador_principal):
-        self.__usuarios = [Usuario("Luis", "13539399950", "48991661150", "m", "gustavos", "12341234", 15, 200)]
+        self.__usuarios = []
         self.__tela_usuario = TelaUsuario()
         self.__controlador_principal = controlador_principal
 
     def cadastro_usuario(self):
         nome, nome_usuario, cpf, senha_usuario, sexo, telefone, tempo_consulta, preco_consulta = self.__tela_usuario.pega_dados_usuario()
+        for i in self.__usuarios:
+            while(i.nome_usuario == nome_usuario):
+                self.__tela_usuario.mostra_mensagem("nome de usuario ja usado, coloque outro")
+                nome_usuario = self.__tela_usuario.pega_nome_usuario()
+            while(i.cpf == cpf):
+                self.__tela_usuario.mostra_mensagem("CPF ja usado no usuario, voce ja possui usuario")
+                cpf = self.__tela_usuario.pega_cfp_usuario()
         usuario = Usuario(nome, cpf, telefone, sexo, nome_usuario, senha_usuario, preco_consulta, tempo_consulta)
         self.__usuarios.append(usuario)
         mensagem = "cadastro realizado com sucesso"
@@ -21,13 +28,15 @@ class ControladorUsuario:
 
     def busca_usuario_nome_senha(self, nome_usuario, senha_usuario):
         existe = True
+        verificacao = False
         for usuario in self.todos_usuarios:
             if(nome_usuario == usuario.nome_usuario and senha_usuario == usuario.senha_usuario):
                 existe = False
                 self.menu_usuario(usuario)
-            elif(nome_usuario == usuario.nome_usuario or senha_usuario == usuario.senha_usuario):
-                self.__tela_usuario.mostra_mensagem("Usuario ou senha incorretos")
-                existe = False
+            elif(nome_usuario == usuario.nome_usuario):
+                verificacao = True
+        if verificacao:
+            self.__tela_usuario.mostra_mensagem("Usuario ou senha incorretos")
         if(existe):
                 self.__tela_usuario.mostra_mensagem("usuario nao existe")
 
@@ -55,7 +64,8 @@ class ControladorUsuario:
                     4: self.alterar_dados_usuario,
                     5: self.cadastro_usuario,
                     6: self.exclui_meu_usuario,
-                    7: self.calculo_financeiro}
+                    7: self.calculo_financeiro,
+                    0: 0}
         while True:
             opcao = self.__tela_usuario.tela_opcoes()
             funcao_escolhida = switcher[opcao]
@@ -120,3 +130,8 @@ class ControladorUsuario:
                 break
             else:
                 funcao_escolhida(usuario)
+
+    def imprimir_dados_usuario(self, usuario):
+        for i in self.__usuarios:
+            if(i == usuario):
+                self.__tela_usuario.imprimir_dados_usuario(usuario)

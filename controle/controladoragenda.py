@@ -12,16 +12,20 @@ class ControladorAgenda:
         self.__controlador_consulta = ControladorConsulta
         self.__controlador_cliente = ControladorClientes
 
+    #TEM QUE ARRUMAR ISSO AQUI, QUERO O TAMANHO DA LISTA CLIENTES
     def inclui_consulta(self, usuario):
-        consulta = self.__controlador_principal.controlador_consulta.cadastrar_consulta(usuario)
-        self.__controlador_principal.controlador_consulta.add_consulta(consulta)
-        if isinstance(consulta, Consulta):
-            for data, horarios in usuario.agenda.minhas_consultas.items():
-                if data == consulta.data:
-                    for k, v in horarios.items():
-                        if v == "vago" and k == consulta.horario:
-                            horarios[k] = consulta
-            self.__tela_agenda.mostra_mensagem(f"{consulta} cadastrada com sucesso")
+        if(self.__controlador_principal.controlador_cliente.numero_clientes(self) > 0):
+            consulta = self.__controlador_principal.controlador_consulta.cadastrar_consulta(usuario)
+            self.__controlador_principal.controlador_consulta.add_consulta(consulta)
+            if isinstance(consulta, Consulta):
+                for data, horarios in usuario.agenda.minhas_consultas.items():
+                    if data == consulta.data:
+                        for k, v in horarios.items():
+                            if v == "vago" and k == consulta.horario:
+                                horarios[k] = consulta
+                self.__tela_agenda.mostra_mensagem(f"{consulta} cadastrada com sucesso")
+        else:
+            self.__tela_agenda.mostra_mensagem("Cliente nao cadastrado")
 
     def exclui_consulta(self, usuario):
         consulta = self.__controlador_principal.controlador_consulta.exclui_consulta()
@@ -58,8 +62,8 @@ class ControladorAgenda:
         self.__tela_agenda.mostra_mensagem("-------Minhas consultas------")
         for data, horarios in usuario.agenda.minhas_consultas.items():
             self.__tela_agenda.mostra_mensagem(data)
-            for k, v in horarios.items():
-                self.__tela_agenda.imprimir(k, v)
+            for hora, consulta in horarios.items():
+                self.__tela_agenda.imprimir(hora, consulta)
 
     def menu_agenda(self, usuario):
         switcher = {1: self.inclui_consulta,

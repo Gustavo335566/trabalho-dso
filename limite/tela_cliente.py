@@ -70,6 +70,13 @@ class TelaCliente:
 
     def seleciona_cliente(self):
         cpf = input("CPF do cliente: ")
+        while len(cpf) != 11:
+            print("CPF invalido")
+            if cpf.isalnum():
+                print("falta digitos")
+            else:
+                print("Somente numeros")
+            cpf = input("CPF do cliente: ")
         return cpf
 
     def mostra_mensagem(self, msg):

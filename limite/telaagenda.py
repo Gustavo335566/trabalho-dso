@@ -15,8 +15,8 @@ class TelaAgenda:
             opcao = int(input("opcao: "))
         return opcao
 
-    def imprimir(self, k, v):
-        print(f"{k} : {v}")
+    def imprimir(self, hora, consulta):
+        print(f"{hora} : {consulta}")
 
     def inclui(self, mensagem):
         print(mensagem)
@@ -26,7 +26,7 @@ class TelaAgenda:
 
     def pega_cpf_cliente(self):
         cpf = str(input("Digite aqui o seu cpf: "))
-        while True(len(cpf) != 11):
+        while len(cpf) != 11:
             print("Digito invalido somente numeros")
             cpf = str(input("Digite aqui o seu cpf: "))
         return cpf

@@ -5,13 +5,16 @@ from limite.tela_cliente import TelaCliente
 class ControladorClientes:
     def __init__(self, controlador_principal):
         self.__controlador_principal = controlador_principal
-        self.__clientes = [Cliente("Gustavo", "10182252930", "48999999999", "m")]
+        self.__clientes = []
         self.__tela_clientes = TelaCliente(self)
-        #ARRUMAR FUNÇÃO DE HISTORICO
 
     @property
     def clientes(self):
         return self.__clientes
+
+    def numero_clientes(self):
+        numero_clientes = len(self.__clientes)
+        return  numero_clientes
 
     def adicionar_no_historico(self, consulta, usuario):
         observacao = self.__tela_clientes.pega_observacao()

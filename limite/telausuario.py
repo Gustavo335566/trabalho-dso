@@ -27,7 +27,7 @@ class TelaUsuario():
             nome_completo = str(input("digite o seu nome: "))
             nome = nome_completo.replace(" ", "")
         cpf = str(input("digite o seu cpf: "))
-        while cpf.isalnum() is False and len(cpf) != 11:
+        while cpf.isdigit() is False or len(cpf) != 11:
             print("somente numeros ou atencao ao tamanho do cpf")
             cpf = input("digite o seu cpf: ")
         print("o nome de usuario pode conter somente letras e tem que ter de 8 a 20 caracteres, sem espacos.")
@@ -35,10 +35,10 @@ class TelaUsuario():
         while nome_usuario.isalpha() is False or len(nome_usuario) < 8 or len(nome_usuario) > 20:
             print("Somente letras e tamanho de nome do usuario de 8 a 20 caracteres")
             nome_usuario = str(input("Digite o nome do seu usuario: "))
-        print("Senha somente numeros, tamanho da senha de 8 a 16 algarismo")
+        print("Senha letras e numeros, tamanho da senha de 8 a 16 algarismo")
         senha_usuario = str(input("digite uma senha: "))
-        while senha_usuario.isalnum() is False or len(senha_usuario) < 8 or len(senha_usuario) > 16:
-            print("Senha somente numeros, tamanho da senha de 8 a 16 algarismo")
+        while senha_usuario.isalnum() is False or senha_usuario.isdigit() is True or senha_usuario.isalpha() or len(senha_usuario) < 8 or len(senha_usuario) > 16:
+            print("Senha letras e numeros, tamanho da senha de 8 a 16 algarismo")
             senha_usuario = str(input("digite uma senha: "))
         sexo = input("digite o seu sexo [m/f]: ")
         while True:
@@ -47,11 +47,11 @@ class TelaUsuario():
             print("Somente m ou f")
             sexo = input("digite o seu sexo [m/f]: ")
         telefone = str(input("digite o seu telefone formato xx9xxxxxxxx: "))
-        while telefone.isalnum() is False or len(telefone) != 11:
+        while telefone.isdigit() is False or len(telefone) != 11:
             print("Tamanho do numero invalido, somente DDD9xxxxyyyy")
             telefone = str(input("digite o seu telefone formato xx9xxxxxxxx: "))
         tempo_consulta = int(input("Tempo de consulta: "))
-        while 60 > tempo_consulta < 10:
+        while tempo_consulta > 60 or tempo_consulta < 10:
             print("Tempo de consulta somente em minutos, de 10min a 60min")
             tempo_consulta = int(input("Tempo de consulta: "))
         preco_consulta = float(input("Preco da consulta: "))
@@ -82,7 +82,7 @@ class TelaUsuario():
 
     def pega_telefone(self):
         telefone = str(input("digite o seu telefone formato xx9xxxxxxxx: "))
-        while telefone.isalnum() is False or len(telefone) != 11:
+        while telefone.isdigit() is False or len(telefone) != 11:
             print("Tamanho do numero invalido, somente DDD9xxxxyyyy")
             telefone = str(input("digite o seu telefone formato xx9xxxxxxxx: "))
         return telefone
@@ -96,8 +96,9 @@ class TelaUsuario():
 
     def pega_senha_usuario(self):
         senha_usuario = str(input("digite uma senha: "))
-        while senha_usuario.isalnum() is False or len(senha_usuario) < 8 or len(senha_usuario) > 16:
-            print("Senha somente numeros, tamanho da senha de 8 a 16 algarismo")
+        while senha_usuario.isalnum() is False or senha_usuario.isdigit() is True or senha_usuario.isalpha() or len(
+                senha_usuario) < 8 or len(senha_usuario) > 16:
+            print("Senha letras e numeros, tamanho da senha de 8 a 16 algarismo")
             senha_usuario = str(input("digite uma senha: "))
         return senha_usuario
 
@@ -124,9 +125,9 @@ class TelaUsuario():
             preco_consulta = float(input("Preco da consulta: "))
         return  preco_consulta
 
-    def pega_cfp_cliente(self):
+    def pega_cfp_usuario(self):
         cpf = str(input("digite o seu cpf: "))
-        while cpf.isalnum() is False and len(cpf) != 11:
+        while cpf.isdigit() is False or len(cpf) != 11:
             print("somente numeros ou atencao ao tamanho do cpf")
             cpf = input("digite o seu cpf: ")
         return cpf
@@ -141,3 +142,7 @@ class TelaUsuario():
     def palavra_chave(self):
         palavra = str(input("Digite a palavra chave: "))
         return palavra
+
+    def imprimir_dados_usuario(self, usuario):
+        print(f"{usuario.nome} {usuario.nome_usuario} {usuario.sexo} {usuario.senha_usuario} {usuario.telefone} {usuario.preco_consulta}"
+              f"{usuario.cpf} ")
