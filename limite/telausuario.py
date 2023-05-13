@@ -41,21 +41,23 @@ class TelaUsuario():
             print("Senha somente numeros, tamanho da senha de 8 a 16 algarismo")
             senha_usuario = str(input("digite uma senha: "))
         sexo = str(input("digite o seu sexo [m/f]: ")).upper()
-        while sexo != "M" or sexo != "F":
+        while True:
             print("Somente m ou f")
-            sexo = str(input("digite o seu sexo [m/f]: ")).upper()
+            sexo = str(input("digite o seu sexo [m/f]: "))
+            if sexo.upper() in "M" or sexo.upper() in "F":
+                break
         telefone = str(input("digite o seu telefone formato xx9xxxxxxxx: "))
         while telefone.isalnum() is False or len(telefone) != 11:
             print("Tamanho do numero invalido, somente DDD9xxxxyyyy")
             telefone = str(input("digite o seu telefone formato xx9xxxxxxxx: "))
         tempo_consulta = int(input("Tempo de consulta: "))
-        while tempo_consulta.isalnum() is False or len(tempo_consulta) != 2:
-            print("Tempo de consulta somente em minutos")
+        while 60 > tempo_consulta < 10:
+            print("Tempo de consulta somente em minutos, de 10min a 60min")
             tempo_consulta = int(input("Tempo de consulta: "))
         preco_consulta = float(input("Preco da consulta: "))
         while not preco_consulta > 0:
             print("preco invalido")
-            preco_consulta float(input("Preco da consulta: "))
+            preco_consulta = float(input("Preco da consulta: "))
         return nome, nome_usuario, cpf, senha_usuario, sexo, telefone, tempo_consulta, preco_consulta
 
     def mostra_mensagem(self, mensagem):

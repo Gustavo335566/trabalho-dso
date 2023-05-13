@@ -1,9 +1,12 @@
 from entidade.agenda import Agenda
+from entidade.consulta import Consulta
 from limite.tela_agenda import Tela_Agenda
 from controle.controlador_consulta import ControladorConsulta
 from controle.controlador_cliente import ControladorClientes
-class ControladorAgenda(Agenda, Tela_Agenda, ControladorPrincipal, ControladorConsulta, ControladorClientes):
-    def __init__(self, controlador_principal: ControladorPrincipal):
+
+
+class ControladorAgenda:
+    def __init__(self, controlador_principal):
         self.__controlador_principal = controlador_principal
         self.__tela_agenda = Tela_Agenda()
         self.__controlador_consulta = ControladorConsulta

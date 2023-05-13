@@ -24,7 +24,7 @@ class TelaPrincipal:
     def tela_login(self):
         nome_usuario = str(input("Coloque o seu nome de usuario: "))
         senha_usuario = str(input("Coloque a sua senha: "))
-        return  nome_usuario, senha_usuario
+        return nome_usuario, senha_usuario
 
     def mostra_mensagem(self, mensagem: str):
         print(mensagem)

@@ -29,13 +29,15 @@ class ControladorPrincipal:
         exit(0)
 
     def teste_login(self):
-        if(len(self.__controlador_usuario.todos_usuarios) == 0):
+        print(self.__controlador_usuario.todos_usuarios)
+        if len(self.__controlador_usuario.todos_usuarios) == 0:
             self.__controlador_usuario.cadastro_usuario()
         else:
-            self.__controlador_usuario.busca_usuario_nome_senha(TelaPrincipal.tela_login())
+            nome_usuario, senha_usuario = self.__tela_principal.tela_login()
+            self.__controlador_usuario.busca_usuario_nome_senha(nome_usuario, senha_usuario)
 
     def abre_tela(self):
-        lista_opcoes = {1: self.teste_login(), 2: self.__controlador_usuario.cadastro_usuario(), 0: self.encerra_sistema}
+        lista_opcoes = {1: self.teste_login, 2: self.__controlador_usuario.cadastro_usuario, 0: self.encerra_sistema}
         while True:
             opcao = self.__tela_principal.lista_opcoes()
             funcao = lista_opcoes[opcao]

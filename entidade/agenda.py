@@ -1,35 +1,26 @@
 
 
 class Agenda:
-    def __int__(self, tempo_consulta: int):
-            self.__minhas_consultas = [self.dias_semana(tempo_consulta)] #um nome melhor para isso ex slots disponiveis
-            self.__tempo_consulta = tempo_consulta
+    def __init__(self, tempo_consulta: int):
+        self.__minhas_consultas = []
+        self.dias_semana(tempo_consulta) #um nome melhor para isso ex slots disponiveis
+        self.__tempo_consulta = tempo_consulta
 
     @property
     def minhas_consultas(self):
         return self.__minhas_consultas
 
-    #Precisa disso
-    """def add_minhas_consultas(self, consulta: Consulta): #pensar num nome melhor
-        if isinstance(consulta, Consulta):
-            for i in self.__minhas_consultas():
-                if(i == consulta):
-                    return "Consulta duplicada" \
-            self.__minhas_consultas.append(consulta)
-            return f"Consulta adicionada a lista" """
+    @property
+    def tempo_consulta(self):
+        return self.__tempo_consulta
 
-    #Precisa disso
-    """def delete_minhas_consultas(self, consulta: Consulta):
-        if isinstance(consulta, Consulta):
-            for i in self.__minhas_consultas:
-                if(i == consulta):
-                    self.__minhas_consultas.remove(consulta)
-                    return "Consulta removida"
-            return "Consulta nao esta na lista de minhas consultas"""""
+    @tempo_consulta.setter
+    def tempo_consulta(self, tempo_consulta: int):
+        self.__tempo_consulta = tempo_consulta
 
     def personalizar_horarios(self, tempo_consulta):
         horarios = {}
-        divisao = 60//int(self.__tempo_consulta)
+        divisao = 60//int(tempo_consulta)
         for i in range(8, 18):
             cont = 0
             for j in range(divisao):

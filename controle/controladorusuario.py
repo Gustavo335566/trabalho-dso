@@ -4,18 +4,20 @@ from controle.controladoragenda import ControladorAgenda
 from controle.controlador_cliente import ControladorClientes
 from controle.controlador_consulta import ControladorConsulta
 from limite.telausuario import TelaUsuario
-class ControladorUsuario(Usuario, Agenda, TelaUsuario, ControladorAgenda, ControladorClientes, ControladorConsulta):
+
+
+class ControladorUsuario:
     def __init__(self, controlador_principal):
         self.__usuarios = []
         self.__tela_usuario = TelaUsuario()
-        self.__controlador_principal = ControladorPrincipal
+        self.__controlador_principal = controlador_principal
 
     def cadastro_usuario(self):
-        nome, nome_usuario, cpf, senha_usuario, sexo, telefone, tempo_consulta, preco_consulta = TelaUsuario.pega_dados_usuario()
-        usuario = Usuario(nome, nome_usuario, cpf, senha_usuario, sexo, telefone, tempo_consulta, preco_consulta)
+        nome, nome_usuario, cpf, senha_usuario, sexo, telefone, tempo_consulta, preco_consulta = self.__tela_usuario.pega_dados_usuario()
+        usuario = Usuario(nome, cpf, telefone, sexo, nome_usuario, senha_usuario, preco_consulta, tempo_consulta)
         self.__usuarios.append(usuario)
         mensagem = "cadastro realizado com sucesso"
-        TelaUsuario.mostra_mensagem(mensagem)
+        self.__tela_usuario.mostra_mensagem(mensagem)
 
     def finalizar(self):
         exit(0)
