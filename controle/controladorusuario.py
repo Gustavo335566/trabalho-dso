@@ -54,7 +54,8 @@ class ControladorUsuario:
                     3: self.consulta_feita,
                     4: self.alterar_dados_usuario,
                     5: self.cadastro_usuario,
-                    6: self.exclui_meu_usuario}
+                    6: self.exclui_meu_usuario,
+                    7: self.calculo_financeiro}
         while True:
             opcao = self.__tela_usuario.tela_opcoes()
             funcao_escolhida = switcher[opcao]
@@ -65,57 +66,53 @@ class ControladorUsuario:
             else:
                 funcao_escolhida(usuario)
 
+    def calculo_financeiro(self, usuario):
+        calculo = len(usuario.relatorio) * usuario.preco_consulta
+        self.__tela_usuario.mostra_mensagem(str(calculo))
+
+
     def consulta_feita(self, usuario):
         cliente = self.__controlador_principal.controlador_cliente.pega_cliente_por_cpf()
-        for data in usuario.agenda.minhas_consultas:
-            for hora, consulta in data.items():
+        for data, horarios in usuario.agenda.minhas_consultas.items():
+            for hora, consulta in horarios.items():
                 if consulta != "vago":
-                    print(consulta)
-                    print(cliente)
-                    print(consulta.cliente)
                     if (consulta.cliente == cliente):
                         usuario.relatorio.append(consulta)
                         self.__controlador_principal.controlador_cliente.adicionar_no_historico(consulta, usuario)
 
     def mudanca_telefone(self, usuario):
         telefone = self.__tela_usuario.pega_telefone()
-        usuario.telefone(telefone)
+        usuario.atualiza_atributo("telefone", telefone)
 
     def mudanca_preco(self, usuario):
         preco_consulta = self.__tela_usuario.pega_preco()
-        usuario.preco_consulta(preco_consulta)
-        self.__tela_usuario.mostra_mensagem("Mudanca do preco correta")
+        usuario.atualiza_atributo("preco_consulta", preco_consulta)
 
     def mudanca_tempo_consulta(self, usuario):
         tempo_consulta = self.__tela_usuario.pega_tempo_consulta()
-        usuario.agenda.tempo_consulta(tempo_consulta)
-        self.__tela_usuario.mostra_mensagem("Mudanca do tempo da consulta feita")
+        usuario.atualiza_atributo("tempo_consulta", tempo_consulta)
 
     def mudanca_nome(self, usuario):
         nome = self.__tela_usuario.pega_nome()
-        usuario.nome(nome)
-        self.__tela_usuario.mostra_mensagem("Mudanca do nome feita com sucesso")
+        usuario.atualiza_atributo("nome", nome)
 
     def mudanca_nome_usuario(self, usuario):
         nome_usuario = self.__tela_usuario.pega_nome_usuario()
-        usuario.nome_usuario(nome_usuario)
-        self.__tela_usuario.mostra_mensagem("Mudanca do nome de usuario feita com sucesso")
+        usuario.atualiza_atributo("nome_usuario", nome_usuario)
 
     def mudanca_senha_usuario(self, usuario):
         senha_usuario = self.__tela_usuario.pega_senha_usuario()
-        usuario.senha_usuario(senha_usuario)
-        self.__tela_usuario.mostra_mensagem("Mudanca da senha do usuario feita com sucesso")
+        usuario.atualiza_atributo("senha_usuario", senha_usuario)
 
     def mudanca_sexo(self, usuario):
         sexo = self.__tela_usuario.pega_sexo()
-        usuario.sexo(sexo)
-        self.__tela_usuario.mostra_mensagem("Mudanca do sexo feita com sucesso")
+        usuario.atualiza_atributo("sexo", sexo)
 
     def alterar_dados_usuario(self, usuario):
         switcher = {1: self.mudanca_telefone, 2: self.mudanca_preco,
                     3: self.mudanca_tempo_consulta, 4: self.mudanca_nome,
                     5: self.mudanca_nome_usuario, 6: self.mudanca_senha_usuario,
-                    7: self.mudanca_sexo}
+                    7: self.mudanca_sexo, 0: None}
         while True:
             opcao = self.__tela_usuario.mudanca_dados_usuario()
             funcao_escolhida = switcher[opcao]

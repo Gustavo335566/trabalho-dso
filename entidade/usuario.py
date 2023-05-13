@@ -46,3 +46,6 @@ class Usuario(Pessoa):
     def preco_consulta(self, preco_consulta: float):
         if isinstance(preco_consulta, float):
             self.__preco_consulta = preco_consulta
+
+    def atualiza_atributo(self, atributo, valor):
+        setattr(self, atributo, valor)

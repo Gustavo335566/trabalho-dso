@@ -14,6 +14,7 @@ class ControladorAgenda:
 
     def inclui_consulta(self, usuario):
         consulta = self.__controlador_principal.controlador_consulta.cadastrar_consulta(usuario)
+        self.__controlador_principal.controlador_consulta.add_consulta(consulta)
         if isinstance(consulta, Consulta):
             for data, horarios in usuario.agenda.minhas_consultas.items():
                 if data == consulta.data:
@@ -23,12 +24,12 @@ class ControladorAgenda:
             self.__tela_agenda.mostra_mensagem(f"{consulta} cadastrada com sucesso")
 
     def exclui_consulta(self, usuario):
-        consulta = self.__controlador_principal.controlador_consulta.exclui_consulta(usuario)
+        consulta = self.__controlador_principal.controlador_consulta.exclui_consulta()
         if consulta is not str:
-            for i in usuario.agenda.minhas_consultas:
-                for k, v in i.items():
+            for data, horarios in usuario.agenda.minhas_consultas.items():
+                for hora, v in horarios.items():
                     if consulta == v:
-                        i[k] = "vago"
+                        horarios[hora] = "vago"
                         self.__tela_agenda.mostra_mensagem("Consulta excluida")
         else:
             self.__tela_agenda.mostra_mensagem(consulta)
@@ -43,16 +44,15 @@ class ControladorAgenda:
     def pega_consulta_por_cpf(self):
         cliente = self.__controlador_principal.controlador_cliente.pega_cliente_por_cpf()
         codigo = self.__controlador_principal.controlador_consulta.pega_codigo_por_cliente(cliente)
-        consulta = self.__controlador_principal.controlador_consulta.pega_consulta_por_codigo(codigo)
-        return consulta
+        return codigo
 
     def procura_consulta(self, usuario):
-        consulta = self.pega_consulta_por_cpf()
+        codigo = self.pega_consulta_por_cpf()
         for data, horarios in usuario.agenda.minhas_consultas.items():
-            for k, v in horarios.items():
+            for hora, v in horarios.items():
                 if not isinstance(v, str):
-                    if v.codigo == consulta.codigo:
-                        self.__tela_agenda.imprimir_consulta(consulta)
+                    if v.codigo == codigo:
+                        self.__tela_agenda.imprimir_consulta(v)
 
     def mostrar_lista_consultas(self, usuario):
         self.__tela_agenda.mostra_mensagem("-------Minhas consultas------")

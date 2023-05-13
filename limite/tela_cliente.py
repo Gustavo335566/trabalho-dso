@@ -12,8 +12,14 @@ class TelaCliente:
             if nome_comprimido.isalpha():
                 break
         cpf = input("CPF: ")
+        while len(cpf) != 11:
+            cpf = input("CPF: ")
         telefone = input("Telefone: ")
-        sexo = input("Sexo [M/F]: ")
+        while len(telefone) != 11:
+            telefone = input("Telefone: ")
+        sexo = input("Sexo [M/F]: ").upper()
+        while sexo != "M" and sexo != "F":
+            sexo = input("Sexo [M/F]: ").upper()
         return {"nome": nome, "cpf": cpf, "telefone": telefone, "sexo": sexo}
 
     def pega_valor(self):
@@ -26,7 +32,7 @@ class TelaCliente:
         print("4 - Sexo")
         print("0 - Voltar")
         try:
-            valor = int(input("Qual valor será alterado? "))
+            valor = int(input("Qual valor será alterado: "))
             return valor
         except ValueError:
             print("Escolha um valor dentre as opções")

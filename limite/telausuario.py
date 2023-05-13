@@ -10,9 +10,10 @@ class TelaUsuario():
         print("4 - alterar dados do usuario")
         print("5 - cadastrar usuario")
         print("6 - excluir meu usuario")
+        print("7 - Relatorio financeiro")
         print("0 - deslogar")
         opcao = int(input("Escolha a opcao: "))
-        lista = [1, 2, 3, 4, 5, 6, 0]
+        lista = [1, 2, 3, 4, 5, 6, 7, 0]
         while opcao not in lista:
             print("Valor incorreto")
             opcao = int(input("Escolha a opcao: "))
@@ -88,8 +89,8 @@ class TelaUsuario():
 
     def pega_tempo_consulta(self):
         tempo_consulta = int(input("Tempo de consulta: "))
-        while tempo_consulta.isalnum() is False or len(tempo_consulta) != 2:
-            print("Tempo de consulta somente em minutos")
+        while 60 > tempo_consulta < 10:
+            print("Tempo de consulta somente em minutos, de 10min a 60min")
             tempo_consulta = int(input("Tempo de consulta: "))
         return tempo_consulta
 
@@ -132,7 +133,7 @@ class TelaUsuario():
 
     def pega_sexo(self):
         sexo = str(input("digite o seu sexo [m/f]: ")).upper()
-        while sexo != "M" or sexo != "F":
+        while sexo != "M" and sexo != "F":
             print("Somente m ou f")
             sexo = str(input("digite o seu sexo [m/f]: ")).upper()
         return sexo
