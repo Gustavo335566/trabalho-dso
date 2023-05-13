@@ -16,6 +16,18 @@ class ControladorPrincipal:
     def controlador_cliente(self):
         return self.__controlador_cliente
 
+    @property
+    def controlador_agenda(self):
+        return self.__controlador_agenda
+
+    @property
+    def controlador_consulta(self):
+        return self.__controlador_consulta
+
+    @property
+    def controlador_usuario(self):
+        return self.__controlador_usuario
+
     def menu_clientes(self):
         self.__controlador_cliente.mostra_menu_clientes()
 
@@ -29,7 +41,6 @@ class ControladorPrincipal:
         exit(0)
 
     def teste_login(self):
-        print(self.__controlador_usuario.todos_usuarios)
         if len(self.__controlador_usuario.todos_usuarios) == 0:
             self.__controlador_usuario.cadastro_usuario()
         else:

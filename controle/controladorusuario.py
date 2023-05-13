@@ -8,7 +8,7 @@ from limite.telausuario import TelaUsuario
 
 class ControladorUsuario:
     def __init__(self, controlador_principal):
-        self.__usuarios = []
+        self.__usuarios = [Usuario("Luis", "13539399950", "48991661150", "m", "gustavos", "12341234", 15, 200)]
         self.__tela_usuario = TelaUsuario()
         self.__controlador_principal = controlador_principal
 
@@ -19,8 +19,6 @@ class ControladorUsuario:
         mensagem = "cadastro realizado com sucesso"
         self.__tela_usuario.mostra_mensagem(mensagem)
 
-    def finalizar(self):
-        exit(0)
     def busca_usuario_nome_senha(self, nome_usuario, senha_usuario):
         existe = True
         for usuario in self.todos_usuarios:
@@ -28,17 +26,17 @@ class ControladorUsuario:
                 existe = False
                 self.menu_usuario(usuario)
             elif(nome_usuario == usuario.nome_usuario or senha_usuario == usuario.senha_usuario):
-                TelaUsuario.mostra_mensagem("Usuario ou senha incorretos")
+                self.__tela_usuario.mostra_mensagem("Usuario ou senha incorretos")
                 existe = False
         if(existe):
-                TelaUsuario.mostra_mensagem("usuario nao existe")
+                self.__tela_usuario.mostra_mensagem("usuario nao existe")
 
     @property
     def todos_usuarios(self):
         return self.__usuarios
 
     def exclui_meu_usuario(self, usuario: Usuario):
-        palavra = TelaUsuario.palavra_chave()
+        palavra = self.__tela_usuario.palavra_chave()
         if palavra == "adm123":
             for i in self.__usuarios:
                 if(usuario == i):
@@ -51,30 +49,77 @@ class ControladorUsuario:
         self.__tela_usuario.mostra_mensagem("Palavra chave incorreta")
 
     def menu_usuario(self, usuario: Usuario):
-        switcher = {0: self.finalizar, 1: self.__controlador_principal.controlador_agenda.menu_agenda(usuario.agenda.minhas_consultas), 2: self.__controlador_principal.controlador_cliente.mostra_menu_clientes(),
-                    3: self.__controlador_principal.controlador_consulta.mostra_menu_consulta(usuario.agenda.minhas_consultas), 4: self.consulta_feita, 5:self.alterar_dados_usuario,
-                    6: self.cadastro_usuario(), 7: self.exclui_meu_usuario(usuario)}
+        switcher = {1: self.__controlador_principal.controlador_agenda.menu_agenda,
+                    2: self.__controlador_principal.controlador_cliente.mostra_menu_clientes,
+                    3: self.consulta_feita,
+                    4: self.alterar_dados_usuario,
+                    5: self.cadastro_usuario,
+                    6: self.exclui_meu_usuario}
         while True:
-            opcao = TelaUsuario.tela_opcoes()
+            opcao = self.__tela_usuario.tela_opcoes()
             funcao_escolhida = switcher[opcao]
-            funcao_escolhida()
+            if opcao == 0:
+                break
+            elif opcao == 6 or opcao == 2:
+                funcao_escolhida()
+            else:
+                funcao_escolhida(usuario)
 
-    def consulta_feita(self):
-        consulta = self.__controlador_principal.controlador_cliente.pega_cliente_por_cpf(self.__tela_usuario.pega_cpf_cliente())
-        if(consulta is str):
-            mensagem = consulta
-            self.__tela_usuario.mostra_mensagem(mensagem)
-        else:
-            #Tem que passar a consulta
-            mensagem = self.__tela_usuario.mostra_mensagem(self.add_historico(consulta))
-            self.__tela_usuario.mostra_mensagem(mensagem)
+    def consulta_feita(self, usuario):
+        cliente = self.__controlador_principal.controlador_cliente.pega_cliente_por_cpf()
+        for data in usuario.agenda.minhas_consultas:
+            for hora, consulta in data.items():
+                if consulta != "vago":
+                    print(consulta)
+                    print(cliente)
+                    print(consulta.cliente)
+                    if (consulta.cliente == cliente):
+                        usuario.relatorio.append(consulta)
+                        self.__controlador_principal.controlador_cliente.adicionar_no_historico(consulta, usuario)
+
+    def mudanca_telefone(self, usuario):
+        telefone = self.__tela_usuario.pega_telefone()
+        usuario.telefone(telefone)
+
+    def mudanca_preco(self, usuario):
+        preco_consulta = self.__tela_usuario.pega_preco()
+        usuario.preco_consulta(preco_consulta)
+        self.__tela_usuario.mostra_mensagem("Mudanca do preco correta")
+
+    def mudanca_tempo_consulta(self, usuario):
+        tempo_consulta = self.__tela_usuario.pega_tempo_consulta()
+        usuario.agenda.tempo_consulta(tempo_consulta)
+        self.__tela_usuario.mostra_mensagem("Mudanca do tempo da consulta feita")
+
+    def mudanca_nome(self, usuario):
+        nome = self.__tela_usuario.pega_nome()
+        usuario.nome(nome)
+        self.__tela_usuario.mostra_mensagem("Mudanca do nome feita com sucesso")
+
+    def mudanca_nome_usuario(self, usuario):
+        nome_usuario = self.__tela_usuario.pega_nome_usuario()
+        usuario.nome_usuario(nome_usuario)
+        self.__tela_usuario.mostra_mensagem("Mudanca do nome de usuario feita com sucesso")
+
+    def mudanca_senha_usuario(self, usuario):
+        senha_usuario = self.__tela_usuario.pega_senha_usuario()
+        usuario.senha_usuario(senha_usuario)
+        self.__tela_usuario.mostra_mensagem("Mudanca da senha do usuario feita com sucesso")
+
+    def mudanca_sexo(self, usuario):
+        sexo = self.__tela_usuario.pega_sexo()
+        usuario.sexo(sexo)
+        self.__tela_usuario.mostra_mensagem("Mudanca do sexo feita com sucesso")
 
     def alterar_dados_usuario(self, usuario):
-        switcher = {1: usuario.telefone(self.__tela_usuario.mudanca_telefone()), 2: usuario.preco_consulta(self.__tela_usuario.mudanca_preco()),
-                    3: usuario.preco_consulta(self.__tela_usuario.tempo_consulta()), 4: usuario.nome(self.__tela_usuario.mudanca_nome()),
-                    5: usuario.nome_usuario(self.__tela_usuario.mudanca_nome_usuario()), 6 : usuario.senha(self.__tela_usuario.mudanca_senha()),
-                    7: usuario.sexo(self.__tela_usuario.mudanca_sexo()), 0: self.finalizar}
+        switcher = {1: self.mudanca_telefone, 2: self.mudanca_preco,
+                    3: self.mudanca_tempo_consulta, 4: self.mudanca_nome,
+                    5: self.mudanca_nome_usuario, 6: self.mudanca_senha_usuario,
+                    7: self.mudanca_sexo}
         while True:
             opcao = self.__tela_usuario.mudanca_dados_usuario()
             funcao_escolhida = switcher[opcao]
-            funcao_escolhida()
+            if opcao == 0:
+                break
+            else:
+                funcao_escolhida(usuario)

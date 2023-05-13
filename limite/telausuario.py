@@ -6,19 +6,18 @@ class TelaUsuario():
         print("------USUARIO--------")
         print("1 - Agenda")
         print("2 - Cliente")
-        print("3 - Consulta")
-        print("4 - Consulta feita")
-        print("5 - alterar dados do usuario")
-        print("6 - cadastrar usuario")
-        print("7 - excluir meu usuario")
+        print("3 - Consulta feita")
+        print("4 - alterar dados do usuario")
+        print("5 - cadastrar usuario")
+        print("6 - excluir meu usuario")
         print("0 - deslogar")
         opcao = int(input("Escolha a opcao: "))
-        lista = [1, 2, 3, 4, 5, 6, 7, 0]
+        lista = [1, 2, 3, 4, 5, 6, 0]
         while opcao not in lista:
             print("Valor incorreto")
             opcao = int(input("Escolha a opcao: "))
         return opcao
-    #fazer a funcao casdastrar usuario
+
     def pega_dados_usuario(self):
         nome_completo = str(input("digite o seu nome: ")).capitalize()
         nome = nome_completo.replace(" ","")
@@ -40,12 +39,12 @@ class TelaUsuario():
         while senha_usuario.isalnum() is False or len(senha_usuario) < 8 or len(senha_usuario) > 16:
             print("Senha somente numeros, tamanho da senha de 8 a 16 algarismo")
             senha_usuario = str(input("digite uma senha: "))
-        sexo = str(input("digite o seu sexo [m/f]: ")).upper()
+        sexo = input("digite o seu sexo [m/f]: ")
         while True:
-            print("Somente m ou f")
-            sexo = str(input("digite o seu sexo [m/f]: "))
             if sexo.upper() in "M" or sexo.upper() in "F":
                 break
+            print("Somente m ou f")
+            sexo = input("digite o seu sexo [m/f]: ")
         telefone = str(input("digite o seu telefone formato xx9xxxxxxxx: "))
         while telefone.isalnum() is False or len(telefone) != 11:
             print("Tamanho do numero invalido, somente DDD9xxxxyyyy")
@@ -80,28 +79,28 @@ class TelaUsuario():
             opcao = int(input("Digite aqui o que voce quer mudar: "))
         return  opcao
 
-    def mudanca_telefone(self):
+    def pega_telefone(self):
         telefone = str(input("digite o seu telefone formato xx9xxxxxxxx: "))
         while telefone.isalnum() is False or len(telefone) != 11:
             print("Tamanho do numero invalido, somente DDD9xxxxyyyy")
             telefone = str(input("digite o seu telefone formato xx9xxxxxxxx: "))
         return telefone
 
-    def tempo_consulta(self):
+    def pega_tempo_consulta(self):
         tempo_consulta = int(input("Tempo de consulta: "))
         while tempo_consulta.isalnum() is False or len(tempo_consulta) != 2:
             print("Tempo de consulta somente em minutos")
             tempo_consulta = int(input("Tempo de consulta: "))
         return tempo_consulta
 
-    def mudanca_senha(self):
+    def pega_senha_usuario(self):
         senha_usuario = str(input("digite uma senha: "))
         while senha_usuario.isalnum() is False or len(senha_usuario) < 8 or len(senha_usuario) > 16:
             print("Senha somente numeros, tamanho da senha de 8 a 16 algarismo")
             senha_usuario = str(input("digite uma senha: "))
         return senha_usuario
 
-    def mudanca_nome(self):
+    def pega_nome(self):
         nome_completo = str(input("digite o seu nome: ")).capitalize()
         nome = nome_completo.replace(" ", "")
         while nome.isalpha() is False:
@@ -110,14 +109,14 @@ class TelaUsuario():
             nome = nome_completo.replace(" ", "")
         return nome_completo
 
-    def mudanca_nome_usuario(self):
+    def pega_nome_usuario(self):
         nome_usuario = str(input("digite o seu nome de usuario: "))
         while nome_usuario.isalpha() is False or len(nome_usuario) < 8 or len(nome_usuario) > 20:
             print("Somente letras e tamanho de nome do usuario de 8 a 20 caracteres")
             nome_usuario = str(input("Digite o nome do seu usuario: "))
         return  nome_usuario
 
-    def mudanca_preco(self):
+    def pega_preco(self):
         preco_consulta = float(input("Preco da consulta: "))
         while not preco_consulta > 0:
             print("preco invalido")
@@ -131,7 +130,7 @@ class TelaUsuario():
             cpf = input("digite o seu cpf: ")
         return cpf
 
-    def mudanca_sexo(self):
+    def pega_sexo(self):
         sexo = str(input("digite o seu sexo [m/f]: ")).upper()
         while sexo != "M" or sexo != "F":
             print("Somente m ou f")

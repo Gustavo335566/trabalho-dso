@@ -35,6 +35,10 @@ class TelaCliente:
         novo = input("Novo valor: ")
         return novo
 
+    def pega_observacao(self):
+        observacao = input("Observação: ")
+        return observacao
+
     def mostra_cliente(self, dados_cliente):
         print("-="*30)
         print("NOME:", dados_cliente["nome"], end=" | ")
@@ -50,13 +54,13 @@ class TelaCliente:
         print("2 - Listar Clientes")
         print("3 - Alterar Cliente")
         print("4 - Excluir Cliente")
+        print("5 - Histórico Cliente")
         print("0 - Voltar")
         try:
             opcao = int(input("Opção: "))
             return opcao
         except ValueError:
             print("Escolha um valor dentre as opções")
-
 
     def seleciona_cliente(self):
         cpf = input("CPF do cliente: ")

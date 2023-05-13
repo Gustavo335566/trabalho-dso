@@ -10,10 +10,6 @@ class Cliente(Pessoa):
     def historico(self):
         return self.__historico
 
-    @historico.setter
-    def historico(self, historico):
-        self.__historico = historico
-
     def atualiza_atributo(self, atributo, valor):
         setattr(self, atributo, valor)
 

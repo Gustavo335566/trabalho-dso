@@ -1,12 +1,11 @@
 from entidade.cliente import Cliente
 from limite.tela_cliente import TelaCliente
-from controle.validate_dados import *
 
 
 class ControladorClientes:
     def __init__(self, controlador_principal):
         self.__controlador_principal = controlador_principal
-        self.__clientes = []
+        self.__clientes = [Cliente("Gustavo", "10182252930", "48999999999", "m")]
         self.__tela_clientes = TelaCliente(self)
         #ARRUMAR FUNÇÃO DE HISTORICO
 
@@ -14,9 +13,14 @@ class ControladorClientes:
     def clientes(self):
         return self.__clientes
 
-    def pega_cliente_por_cpf(self, cpf: str):
+    def adicionar_no_historico(self, consulta, usuario):
+        observacao = self.__tela_clientes.pega_observacao()
+        consulta.cliente.historico.append(f"{consulta.data} | {consulta.horario} | {usuario.preco_consulta} | {usuario.nome} | {observacao} ")
+
+    def pega_cliente_por_cpf(self):
+        cpf_cliente = self.__tela_clientes.seleciona_cliente()
         for cliente in self.__clientes:
-            if cliente.cpf == cpf:
+            if cliente.cpf == cpf_cliente:
                 return cliente
         return "CPF NAO CADASTRADO"
 
@@ -44,10 +48,9 @@ class ControladorClientes:
 
     def altera_cliente(self):
         self.lista_clientes()
-        cpf_cliente = self.__tela_clientes.seleciona_cliente()
-        cliente = self.pega_cliente_por_cpf(cpf_cliente)
+        cliente = self.pega_cliente_por_cpf()
 
-        if cliente is not None and isinstance(cliente, Cliente):
+        if cliente is not str and isinstance(cliente, Cliente):
             valores = {1: "nome", 2: "cpf", 3: "telefone", 4: "sexo", 0: self.retornar}
             valores_lista = ["1 - Nome", "2 - CPF", "3 - Telefone", "4 - Sexo", "0 - Voltar"]
             for valor in valores_lista:
@@ -65,23 +68,32 @@ class ControladorClientes:
 
     def exclui_cliente(self):
         self.lista_clientes()
-        cpf_cliente = self.__tela_clientes.seleciona_cliente()
-        cliente = self.pega_cliente_por_cpf(cpf_cliente)
+        cliente = self.pega_cliente_por_cpf()
 
-        if cliente is not None:
+        if cliente is not str:
             self.__clientes.remove(cliente)
             self.__tela_clientes.mostra_mensagem(f"{cliente} removido com sucesso")
         else:
             self.__tela_clientes.mostra_mensagem("!!!! CPF NÃO CADASTRADO !!!!")
 
+    def mostra_historico_cliente(self):
+        self.lista_clientes()
+        cliente = self.pega_cliente_por_cpf()
+        if cliente is not str:
+            self.__tela_clientes.mostra_mensagem(cliente.historico)
+        else:
+            self.__tela_clientes.mostra_mensagem(cliente)
+
     def retornar(self):
-        self.__controlador_principal.abre_tela()
+        self.__controlador_principal.controlador_usuario.menu_usuario()
 
     def mostra_menu_clientes(self):
         lista_opcoes = {1: self.incluir_cliente, 2: self.lista_clientes, 3: self.altera_cliente,
-                        4: self.exclui_cliente, 0: self.retornar}
+                        4: self.exclui_cliente, 5: self.mostra_historico_cliente, 0: self.retornar}
         while True:
             opcao = self.__tela_clientes.lista_opcoes()
+            if opcao == 0:
+                break
             try:
                 funcao = lista_opcoes[opcao]
                 funcao()

@@ -42,4 +42,4 @@ class Consulta:
         self.__horario = horario
 
     def __str__(self):
-        return f"{self.codigo}: Consulta de {self.cliente} na data {self.data} as {self.horario}"
+        return f"{self.codigo}: Consulta de {self.cliente}. |{self.data} | {self.horario}|"

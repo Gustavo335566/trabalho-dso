@@ -9,8 +9,12 @@ class Usuario(Pessoa):
         self.__nome_usuario = nome_usuario
         self.__senha_usuario = senha_usuario
         self.__preco_consulta = preco_consulta
-        self.__hitorico = []
+        self.__relatorio = []
         self.__agenda = Agenda(tempo_consulta)
+
+    @property
+    def agenda(self):
+        return self.__agenda
 
     @property
     def nome_usuario(self):
@@ -31,16 +35,8 @@ class Usuario(Pessoa):
             self.__senha_usuario = senha_usuario
 
     @property
-    def historico(self):
-        return self.__hitorico
-
-    def add_historico(self, consulta: Consulta):
-        if isinstance(consulta, Consulta):
-            for i in self.__hitorico:
-                if(i.horario == consulta.horario and i.cpf == consulta.cpf):
-                    return "Consulta ja adicionada"
-            self.__hitorico.append(consulta)
-            return "Consulta adicionada"
+    def relatorio(self):
+        return self.__relatorio
 
     @property
     def preco_consulta(self):

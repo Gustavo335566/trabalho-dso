@@ -2,7 +2,7 @@
 
 class Agenda:
     def __init__(self, tempo_consulta: int):
-        self.__minhas_consultas = []
+        self.__minhas_consultas = {}
         self.dias_semana(tempo_consulta) #um nome melhor para isso ex slots disponiveis
         self.__tempo_consulta = tempo_consulta
 
@@ -24,18 +24,16 @@ class Agenda:
         for i in range(8, 18):
             cont = 0
             for j in range(divisao):
-                horarios[str(i)+":"+ str(cont)] = "vago"
+                if cont == 0:
+                    horarios[f"{str(i)}:00"] = "vago"
+                else:
+                    horarios[f"{str(i)}:{str(cont)}"] = "vago"
                 cont += tempo_consulta
         return horarios
 
     def dias_semana(self, tempo_consulta):
-        segunda = self.personalizar_horarios(tempo_consulta)
-        self.__minhas_consultas.append(segunda)
-        terca = segunda.copy()
-        self.__minhas_consultas.append(terca)
-        quarta = terca.copy()
-        self.__minhas_consultas.append(quarta)
-        quinta = quarta.copy()
-        self.__minhas_consultas.append(quinta)
-        sexta = quinta.copy()
-        self.__minhas_consultas.append(sexta)
+        self.__minhas_consultas["Segunda"] = self.personalizar_horarios(tempo_consulta)
+        self.__minhas_consultas["Terça"] = self.personalizar_horarios(tempo_consulta)
+        self.__minhas_consultas["Quarta"] = self.personalizar_horarios(tempo_consulta)
+        self.__minhas_consultas["Quinta"] = self.personalizar_horarios(tempo_consulta)
+        self.__minhas_consultas["Sexta"] = self.personalizar_horarios(tempo_consulta)

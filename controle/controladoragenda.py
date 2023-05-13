@@ -1,6 +1,6 @@
 from entidade.agenda import Agenda
 from entidade.consulta import Consulta
-from limite.tela_agenda import Tela_Agenda
+from limite.telaagenda import TelaAgenda
 from controle.controlador_consulta import ControladorConsulta
 from controle.controlador_cliente import ControladorClientes
 
@@ -8,28 +8,30 @@ from controle.controlador_cliente import ControladorClientes
 class ControladorAgenda:
     def __init__(self, controlador_principal):
         self.__controlador_principal = controlador_principal
-        self.__tela_agenda = Tela_Agenda()
+        self.__tela_agenda = TelaAgenda()
         self.__controlador_consulta = ControladorConsulta
         self.__controlador_cliente = ControladorClientes
 
-    def inclui_consulta(self, consulta: Consulta):
+    def inclui_consulta(self, usuario):
+        consulta = self.__controlador_principal.controlador_consulta.cadastrar_consulta(usuario)
         if isinstance(consulta, Consulta):
-            for i in self.minhas_consultas:
-                if(i == consulta.datas_consulta):
-                    for k, v in i.items():
-                        if(v == "vago" and k == consulta.horario):
-                            v[k] = consulta
-                        self.minhas_consultas.append(consulta)
-            return "Consulta incluida"
+            for data, horarios in usuario.agenda.minhas_consultas.items():
+                if data == consulta.data:
+                    for k, v in horarios.items():
+                        if v == "vago" and k == consulta.horario:
+                            horarios[k] = consulta
+            self.__tela_agenda.mostra_mensagem(f"{consulta} cadastrada com sucesso")
 
-    def exclui_consulta(self):
-        if isinstance(consulta, Consulta):
-            for i in self.minhas_consultas:
-                for k,v in i.items():
-                    if(codigo == v.codigo):
+    def exclui_consulta(self, usuario):
+        consulta = self.__controlador_principal.controlador_consulta.exclui_consulta(usuario)
+        if consulta is not str:
+            for i in usuario.agenda.minhas_consultas:
+                for k, v in i.items():
+                    if consulta == v:
                         i[k] = "vago"
-                        return "Consulta excluida"
-            return "Consulta inexistente"
+                        self.__tela_agenda.mostra_mensagem("Consulta excluida")
+        else:
+            self.__tela_agenda.mostra_mensagem(consulta)
 
     def Altera_consulta(self, consulta: Consulta):
         if isinstance(consulta, Consulta):
@@ -38,43 +40,35 @@ class ControladorAgenda:
                     return self.minhas_consultas[i]
             return "Consulta inexistente"
 
-    def finalizar(self):
-        exit(0)
+    def pega_consulta_por_cpf(self):
+        cliente = self.__controlador_principal.controlador_cliente.pega_cliente_por_cpf()
+        codigo = self.__controlador_principal.controlador_consulta.pega_codigo_por_cliente(cliente)
+        consulta = self.__controlador_principal.controlador_consulta.pega_consulta_por_codigo(codigo)
+        return consulta
 
-    def procura_consulta(self):
-        codigo = self.__controlador_cliente.pega_cliente_por_cpf()
-        for i in self.minhas_consultas:
-            for k,v in i.items():
-                if(v.codigo == codigo):
-                    self.__tela_agenda.imprimir_consulta(k,v)
+    def procura_consulta(self, usuario):
+        consulta = self.pega_consulta_por_cpf()
+        for data, horarios in usuario.agenda.minhas_consultas.items():
+            for k, v in horarios.items():
+                if not isinstance(v, str):
+                    if v.codigo == consulta.codigo:
+                        self.__tela_agenda.imprimir_consulta(consulta)
 
-    def menu_agenda(self):
-        switcher = {0: self.finalizar(), 1: self.exclui_consulta(), 2: self.__tela_agenda.imprimir(self.minhas_consultas),
-                    3: self.procurar_consulta}
+    def mostrar_lista_consultas(self, usuario):
+        self.__tela_agenda.mostra_mensagem("-------Minhas consultas------")
+        for data, horarios in usuario.agenda.minhas_consultas.items():
+            self.__tela_agenda.mostra_mensagem(data)
+            for k, v in horarios.items():
+                self.__tela_agenda.imprimir(k, v)
+
+    def menu_agenda(self, usuario):
+        switcher = {1: self.inclui_consulta,
+                    2: self.exclui_consulta,
+                    3: self.mostrar_lista_consultas,
+                    4: self.procura_consulta}
         while True:
-            opcao = Tela_Agenda().Tela_Menu()
+            opcao = self.__tela_agenda.menu_agenda()
+            if opcao == 0:
+                break
             funcao_escolhida = switcher[opcao]
-            funcao_escolhida()
-            """lista = [0, 1, 2, 3, 4, 5]
-            while(opcao in not lista):
-                return "opcao invalida"
-            if(opcao == 1):
-                mensagem = inclui_consulta(ControladorConsulta.mostra_menu_consulta())
-                Tela_Agenda().inclui(mensagem)
-            elif(opcao == 2):
-                cliente = ControladorCliente.pega_cliente_por_cpf(Tela_Agenda.pega_cpf_cliente())
-                if(cliente == "CPF NAO CADASTRADO"):
-                    mensagem = cliente
-                    Tela_Agenda.exclui(mensagem)
-                mensagem = ControladorConsulta.pega_codigo_por_cliente(cliente)
-                if(mensagem == """"Tenho que colocar a mensagem or mensagem == """"Tenho que colocar a mensagem):
-                    Tela_Agenda.exclui(mensagem)
-                else:
-                    codigo = mensagem
-                    Tela_Agenda.exclui(exclui_consulta(codigo))
-            elif(opcao == 3):
-                Tela_Agenda.imprimir(self.minhas_consultas)
-            elif(opcao == 4):
-                Tela_Agenda.imprimir_consulta(ControladorConsulta.pega_consulta_por_codigo(ControladorConsulta.pega_codigo_por_cliente(Tela_Agenda.pega_cpf_cliente())))
-            elif(opcao == 0):
-                break"""
+            funcao_escolhida(usuario)
