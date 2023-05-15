@@ -1,19 +1,14 @@
-from entidade.agenda import Agenda
 from entidade.consulta import Consulta
 from limite.tela_agenda import TelaAgenda
-from controle.controlador_consulta import ControladorConsulta
-from controle.controlador_cliente import ControladorClientes
 
 
 class ControladorAgenda:
     def __init__(self, controlador_principal):
         self.__controlador_principal = controlador_principal
         self.__tela_agenda = TelaAgenda()
-        self.__controlador_consulta = ControladorConsulta
-        self.__controlador_cliente = ControladorClientes
 
     def inclui_consulta(self, usuario):
-        if(self.__controlador_principal.controlador_cliente.numero_clientes() > 0):
+        if self.__controlador_principal.controlador_cliente.numero_clientes() > 0:
             consulta = self.__controlador_principal.controlador_consulta.cadastrar_consulta(usuario)
             self.__controlador_principal.controlador_consulta.add_consulta(consulta)
             if isinstance(consulta, Consulta):
