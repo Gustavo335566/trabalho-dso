@@ -5,9 +5,9 @@ class TelaPrincipal:
         self.__controlador_principal = controlador_principal
 
     def lista_opcoes(self):
-        print("*"*30)
-        print("******* SISTEMA CADASTRO BABE *******")
-        print("*"*30)
+        print("*"*35)
+        print("****** SISTEMA CADASTRO BABE ******")
+        print("*"*35)
         print("1 - Login")
         print("2 - Cadastro")
         print("0 - Sair")

@@ -1,5 +1,5 @@
 from entidade.usuario import Usuario
-from limite.telausuario import TelaUsuario
+from limite.tela_usuario import TelaUsuario
 
 
 class ControladorUsuario:
@@ -67,16 +67,17 @@ class ControladorUsuario:
                     2: self.__controlador_principal.controlador_cliente.mostra_menu_clientes,
                     3: self.consulta_feita,
                     4: self.alterar_dados_usuario,
-                    5: self.exclui_meu_usuario,
-                    6: self.calculo_financeiro,
-                    7: self.historico_sistema,
+                    5: self.imprimir_dados_usuario,
+                    6: self.exclui_meu_usuario,
+                    7: self.calculo_financeiro,
+                    8: self.historico_sistema,
                     0: 0}
         while True:
             opcao = self.__tela_usuario.tela_opcoes()
             funcao_escolhida = switcher[opcao]
             if opcao == 0:
                 break
-            elif opcao == 2 or opcao == 7:
+            elif opcao == 2 or opcao == 8:
                 funcao_escolhida()
             else:
                 if opcao == 5:
@@ -93,15 +94,17 @@ class ControladorUsuario:
 
     def consulta_feita(self, usuario):
         cliente = self.__controlador_principal.controlador_cliente.pega_cliente_por_cpf()
+        codigo_consulta_escolhida = self.__controlador_principal.controlador_consulta.pega_codigo_por_cliente(cliente)
         if not isinstance(cliente, str):
             for data, horarios in usuario.agenda.minhas_consultas.items():
                 for hora, consulta in horarios.items():
                     if consulta != "vago":
                         if consulta.cliente == cliente:
-                            usuario.relatorio.append(consulta)
-                            adicione_historico = self.__controlador_principal.controlador_cliente\
-                                .adicionar_no_historico(consulta, usuario)
-                            self.__controlador_principal.controlador_consulta.historico_consultas.append(adicione_historico)
+                            if codigo_consulta_escolhida == consulta.codigo:
+                                usuario.relatorio.append(consulta)
+                                adicione_historico = self.__controlador_principal.controlador_cliente\
+                                    .adicionar_no_historico(consulta, usuario)
+                                self.__controlador_principal.controlador_consulta.historico_consultas.append(adicione_historico)
         else:
             self.__tela_usuario.mostra_mensagem(cliente)
         input()

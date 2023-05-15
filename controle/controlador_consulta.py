@@ -24,9 +24,14 @@ class ControladorConsulta:
         self.__todas_consultas.append(consulta)
 
     def pega_codigo_por_cliente(self, cliente):
+        for consulta in self.todas_consultas:
+            if consulta.cliente == cliente:
+                self.__tela_consulta.mostra_mensagem(consulta)
+        codigo = self.__tela_consulta.seleciona_consulta()
+        consulta_escolhida = self.pega_consulta_por_codigo(codigo)
         if len(self.todas_consultas) > 0:
             for consulta in self.__todas_consultas:
-                if consulta.cliente == cliente:
+                if consulta.cliente == cliente and consulta == consulta_escolhida:
                     return consulta.codigo
             return "CLIENTE NAO POSSUI CONSULTA"
         return "sem consultas cadastradas"

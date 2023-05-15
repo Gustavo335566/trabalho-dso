@@ -1,6 +1,6 @@
 from entidade.agenda import Agenda
 from entidade.consulta import Consulta
-from limite.telaagenda import TelaAgenda
+from limite.tela_agenda import TelaAgenda
 from controle.controlador_consulta import ControladorConsulta
 from controle.controlador_cliente import ControladorClientes
 
@@ -45,12 +45,12 @@ class ControladorAgenda:
         return codigo
 
     def procura_consulta(self, usuario):
-        codigo = self.pega_consulta_por_cpf()
+        cliente = self.__controlador_principal.controlador_cliente.pega_cliente_por_cpf()
         for data, horarios in usuario.agenda.minhas_consultas.items():
-            for hora, v in horarios.items():
-                if not isinstance(v, str):
-                    if v.codigo == codigo:
-                        self.__tela_agenda.imprimir_consulta(v)
+            for hora, consulta in horarios.items():
+                if not isinstance(consulta, str):
+                    if consulta.cliente == cliente:
+                        self.__tela_agenda.imprimir_consulta(consulta)
         input()
 
     def mostrar_horarios(self, usuario):

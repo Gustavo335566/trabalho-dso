@@ -15,7 +15,8 @@ class Pessoa(ABC):
 
     @nome.setter
     def nome(self, nome: str):
-        if isinstance(nome, str) and nome.replace(" ", "").isalpha():
+        nome_comprimido = nome.replace(" ", "")
+        if isinstance(nome, str) and nome_comprimido.isalpha():
             self.__nome = nome.title()
 
     @property

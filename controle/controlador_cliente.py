@@ -14,7 +14,7 @@ class ControladorClientes:
 
     def numero_clientes(self):
         numero_clientes = len(self.__clientes)
-        return  numero_clientes
+        return numero_clientes
 
     def adicionar_no_historico(self, consulta, usuario):
         observacao = self.__tela_clientes.pega_observacao()

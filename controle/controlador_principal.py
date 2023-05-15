@@ -1,8 +1,8 @@
 from limite.tela_principal import TelaPrincipal
 from controle.controlador_cliente import ControladorClientes
 from controle.controlador_consulta import ControladorConsulta
-from controle.controladoragenda import ControladorAgenda
-from controle.controladorusuario import ControladorUsuario
+from controle.controlador_agenda import ControladorAgenda
+from controle.controlador_usuario import ControladorUsuario
 
 class ControladorPrincipal:
     def __init__(self):
@@ -27,9 +27,6 @@ class ControladorPrincipal:
     @property
     def controlador_usuario(self):
         return self.__controlador_usuario
-
-    def menu_clientes(self):
-        self.__controlador_cliente.mostra_menu_clientes()
 
     def inicia_sistema(self):
         self.abre_tela()

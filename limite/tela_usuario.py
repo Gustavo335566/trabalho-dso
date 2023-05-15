@@ -7,11 +7,12 @@ class TelaUsuario:
         print("2 - Cliente")
         print("3 - Consulta feita")
         print("4 - Alterar dados do usuario")
-        print("5 - Excluir meu usuario")
-        print("6 - Relatorio financeiro")
-        print("7 - Historico do sistema")
+        print("5 - Ver dados usuario")
+        print("6 - Excluir meu usuario")
+        print("7 - Relatorio financeiro")
+        print("8 - Historico do sistema")
         print("0 - Logout")
-        lista = [1, 2, 3, 4, 5, 6, 7, 0]
+        lista = [1, 2, 3, 4, 5, 6, 7, 8, 0]
         while True:
             opcao = input("Escolha a opcao: ")
             if opcao.isdigit():
@@ -146,5 +147,5 @@ class TelaUsuario:
         return palavra
 
     def imprimir_dados_usuario(self, usuario):
-        print(f"{usuario.nome} {usuario.nome_usuario} {usuario.sexo} {usuario.senha_usuario} "
-              f"{usuario.telefone} {usuario.preco_consulta} {usuario.cpf}")
+        print(f"Nome:{usuario.nome} | Sexo:{usuario.sexo} | Telefone: {usuario.telefone} |"
+              f"CPF:{usuario.cpf} | Preco Consulta: {usuario.preco_consulta}")
