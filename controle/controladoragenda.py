@@ -12,9 +12,8 @@ class ControladorAgenda:
         self.__controlador_consulta = ControladorConsulta
         self.__controlador_cliente = ControladorClientes
 
-    #TEM QUE ARRUMAR ISSO AQUI, QUERO O TAMANHO DA LISTA CLIENTES
     def inclui_consulta(self, usuario):
-        if(self.__controlador_principal.controlador_cliente.numero_clientes(self) > 0):
+        if(self.__controlador_principal.controlador_cliente.numero_clientes() > 0):
             consulta = self.__controlador_principal.controlador_consulta.cadastrar_consulta(usuario)
             self.__controlador_principal.controlador_consulta.add_consulta(consulta)
             if isinstance(consulta, Consulta):
@@ -38,13 +37,6 @@ class ControladorAgenda:
         else:
             self.__tela_agenda.mostra_mensagem(consulta)
 
-    def Altera_consulta(self, consulta: Consulta):
-        if isinstance(consulta, Consulta):
-            for i in self.minhas_consultas:
-                if(consulta == i):
-                    return self.minhas_consultas[i]
-            return "Consulta inexistente"
-
     def pega_consulta_por_cpf(self):
         cliente = self.__controlador_principal.controlador_cliente.pega_cliente_por_cpf()
         codigo = self.__controlador_principal.controlador_consulta.pega_codigo_por_cliente(cliente)
@@ -58,7 +50,7 @@ class ControladorAgenda:
                     if v.codigo == codigo:
                         self.__tela_agenda.imprimir_consulta(v)
 
-    def mostrar_lista_consultas(self, usuario):
+    def mostrar_horarios(self, usuario):
         self.__tela_agenda.mostra_mensagem("-------Minhas consultas------")
         for data, horarios in usuario.agenda.minhas_consultas.items():
             self.__tela_agenda.mostra_mensagem(data)
@@ -68,7 +60,7 @@ class ControladorAgenda:
     def menu_agenda(self, usuario):
         switcher = {1: self.inclui_consulta,
                     2: self.exclui_consulta,
-                    3: self.mostrar_lista_consultas,
+                    3: self.mostrar_horarios,
                     4: self.procura_consulta}
         while True:
             opcao = self.__tela_agenda.menu_agenda()

@@ -4,7 +4,7 @@ from entidade.consulta import Consulta
 
 
 class Usuario(Pessoa):
-    def __init__(self, nome: str, cpf: str, telefone: str, sexo: str, nome_usuario: str, senha_usuario: str, tempo_consulta: int, preco_consulta: float):
+    def __init__(self, nome: str, cpf: str, telefone: str, sexo: str, nome_usuario: str, senha_usuario: str, preco_consulta: float,  tempo_consulta: int):
         super().__init__(nome, cpf, telefone, sexo)
         self.__nome_usuario = nome_usuario
         self.__senha_usuario = senha_usuario

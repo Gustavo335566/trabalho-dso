@@ -11,13 +11,15 @@ class TelaUsuario():
         print("5 - cadastrar usuario")
         print("6 - excluir meu usuario")
         print("7 - Relatorio financeiro")
+        print("8 - historico do sistema")
         print("0 - deslogar")
-        opcao = int(input("Escolha a opcao: "))
-        lista = [1, 2, 3, 4, 5, 6, 7, 0]
-        while opcao not in lista:
+        lista = [1, 2, 3, 4, 5, 6, 7, 8, 0]
+        while True:
+            opcao = input("Escolha a opcao: ")
+            if opcao.isdigit():
+                if int(opcao) in lista:
+                    return  int(opcao)
             print("Valor incorreto")
-            opcao = int(input("Escolha a opcao: "))
-        return opcao
 
     def pega_dados_usuario(self):
         nome_completo = str(input("digite o seu nome: ")).capitalize()

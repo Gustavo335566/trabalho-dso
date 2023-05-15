@@ -31,9 +31,6 @@ class ControladorPrincipal:
     def menu_clientes(self):
         self.__controlador_cliente.mostra_menu_clientes()
 
-    def menu_consulta(self):
-        self.__controlador_consulta.mostra_menu_consulta()
-
     def inicia_sistema(self):
         self.abre_tela()
 

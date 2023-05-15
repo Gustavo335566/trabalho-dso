@@ -8,12 +8,13 @@ class TelaAgenda:
         print("3 - Imprimir Agenda")
         print("4 - Procurar Consulta")
         print("0 - Voltar")
-        opcao = int(input("opcao: "))
         lista = [1, 2, 3, 4, 0]
-        while opcao not in lista:
+        while True:
+            opcao = input("Escolha a opcao: ")
+            if opcao.isdigit():
+                if int(opcao) in lista:
+                    return int(opcao)
             print("Valor incorreto")
-            opcao = int(input("opcao: "))
-        return opcao
 
     def imprimir(self, hora, consulta):
         print(f"{hora} : {consulta}")

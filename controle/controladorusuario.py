@@ -57,6 +57,11 @@ class ControladorUsuario:
             self.__tela_usuario.mostra_mensagem(mensagem)
         self.__tela_usuario.mostra_mensagem("Palavra chave incorreta")
 
+    def historico_sistema(self):
+        historico = self.__controlador_principal.controlador_consulta.historico_consultas
+        for i in historico:
+            self.__tela_usuario.mostra_mensagem(i)
+
     def menu_usuario(self, usuario: Usuario):
         switcher = {1: self.__controlador_principal.controlador_agenda.menu_agenda,
                     2: self.__controlador_principal.controlador_cliente.mostra_menu_clientes,
@@ -65,13 +70,14 @@ class ControladorUsuario:
                     5: self.cadastro_usuario,
                     6: self.exclui_meu_usuario,
                     7: self.calculo_financeiro,
+                    8: self.historico_sistema,
                     0: 0}
         while True:
             opcao = self.__tela_usuario.tela_opcoes()
             funcao_escolhida = switcher[opcao]
             if opcao == 0:
                 break
-            elif opcao == 6 or opcao == 2:
+            elif opcao == 6 or opcao == 2 or opcao == 8:
                 funcao_escolhida()
             else:
                 funcao_escolhida(usuario)
@@ -88,7 +94,8 @@ class ControladorUsuario:
                 if consulta != "vago":
                     if (consulta.cliente == cliente):
                         usuario.relatorio.append(consulta)
-                        self.__controlador_principal.controlador_cliente.adicionar_no_historico(consulta, usuario)
+                        adicione_historico = self.__controlador_principal.controlador_cliente.adicionar_no_historico(consulta, usuario)
+                        self.__controlador_principal.controlador_consulta.historico_consultas.append(adicione_historico)
 
     def mudanca_telefone(self, usuario):
         telefone = self.__tela_usuario.pega_telefone()

@@ -20,10 +20,16 @@ class Agenda:
 
     def personalizar_horarios(self, tempo_consulta):
         horarios = {}
-        divisao = 60//int(tempo_consulta)
+        cont = 0
+        divisao = 60 / tempo_consulta
+        tempos = round(divisao)
         for i in range(8, 18):
-            cont = 0
-            for j in range(divisao):
+            if cont >= 60:
+                cont = cont - 60
+            for j in range(0, int(tempos)):
+                if cont >= 60:
+                    cont = cont - 60
+                    break
                 if cont == 0:
                     horarios[f"{str(i)}:00"] = "vago"
                 else:

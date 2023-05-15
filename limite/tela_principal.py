@@ -14,12 +14,13 @@ class TelaPrincipal:
         print("1 - login")
         print("2 - Cadastro")
         print("0 - Sair")
-        opcao = int(input("Opção: "))
         lista = [0, 1, 2]
-        while opcao not in lista:
+        while True:
+            opcao = input("Opção: ")
+            if opcao.isdigit():
+                if int(opcao) in lista:
+                    return int(opcao)
             print("Valor incorreto")
-            opcao = int(input())
-        return opcao
 
     def tela_login(self):
         nome_usuario = str(input("Coloque o seu nome de usuario: "))

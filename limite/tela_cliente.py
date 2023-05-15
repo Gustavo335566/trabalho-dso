@@ -31,11 +31,13 @@ class TelaCliente:
         print("3 - Telefone")
         print("4 - Sexo")
         print("0 - Voltar")
-        try:
-            valor = int(input("Qual valor será alterado: "))
-            return valor
-        except ValueError:
-            print("Escolha um valor dentre as opções")
+        lista = [x for x in range(0, 5)]
+        while True:
+            valor = input("Digite a opcao: ")
+            if valor is None:
+                if valor in lista:
+                    return int(valor)
+            print("Valor incorreto")
 
     def pega_novo_valor(self):
         novo = input("Novo valor: ")
@@ -62,11 +64,13 @@ class TelaCliente:
         print("4 - Excluir Cliente")
         print("5 - Histórico Cliente")
         print("0 - Voltar")
-        try:
-            opcao = int(input("Opção: "))
-            return opcao
-        except ValueError:
-            print("Escolha um valor dentre as opções")
+        lista = [1, 2, 3, 4, 5, 0]
+        while True:
+            opcao = input("Escolha a opcao: ")
+            if opcao.isdigit():
+                if int(opcao) in lista:
+                    return int(opcao)
+            print("Valor incorreto")
 
     def seleciona_cliente(self):
         cpf = input("CPF do cliente: ")

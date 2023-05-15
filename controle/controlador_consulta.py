@@ -24,10 +24,12 @@ class ControladorConsulta:
         self.__todas_consultas.append(consulta)
 
     def pega_codigo_por_cliente(self, cliente):
-        for consulta in self.__todas_consultas:
-            if consulta.cliente == cliente:
-                return consulta.codigo
-        return "CLIENTE NAO POSSUI CONSULTA"
+        if len(self.todas_consultas) > 0:
+            for consulta in self.__todas_consultas:
+                if consulta.cliente == cliente:
+                    return consulta.codigo
+            return "CLIENTE NAO POSSUI CONSULTA"
+        return "sem consultas cadastradas"
 
     def pega_consulta_por_codigo(self, codigo):
         for consulta in self.__historico_consultas:
@@ -40,7 +42,7 @@ class ControladorConsulta:
         existe = True
         self.__contador_codigo += 1
         codigo = self.__contador_codigo
-        dados_consulta = self.__tela_consulta.pega_dados_consulta(self.__controlador_principal.controlador_cliente.pega_cliente_por_cpf())
+        dados_consulta = self.__tela_consulta.pega_dados_consulta(self.__controlador_principal.controlador_cliente.pega_cliente_por_cpf(), usuario)
         for cl in self.__controlador_principal.controlador_cliente.clientes:
             if dados_consulta["cliente"] == cl:
                 existe_cliente = True
@@ -55,7 +57,6 @@ class ControladorConsulta:
             else:
                 consulta = Consulta(dados_consulta["cliente"], codigo, dados_consulta["data"], dados_consulta["horario"])
                 self.__historico_consultas.append(consulta)
-                self.__controlador_principal.controlador_cliente.adicionar_no_historico(consulta, usuario)
                 return consulta
 
     def lista_consultas(self):
@@ -76,22 +77,6 @@ class ControladorConsulta:
         else:
             return "!!!! CONSULTA NÃO CADASTRADA !!!!"
 
-    def finalizar_consulta(self, usuario):
-        self.lista_consultas(usuario)
-        codigo = self.__tela_consulta.seleciona_consulta()
-        consulta = self.pega_consulta_por_codigo(codigo)
-
-    def retornar(self):
-        pass
-
-    def mostra_menu_consulta(self, usuario):
-        lista_opcoes = {1: self.cadastrar_consulta, 2: self.lista_consultas, 4: self.exclui_consulta, 0: self.retornar}
-        while True:
-            opcao = self.__tela_consulta.lista_opcoes()
-            funcao = lista_opcoes[opcao]
-            if opcao == 0:
-                break
-            else:
-                funcao(usuario)
-
-#TERMINAR CONSULTA URGENTE: TERMINAR DIAGRAMA, ALTERAR ATRIBUIÇÕES.
+    @property
+    def historico_consultas(self):
+        return self.__historico_consultas
