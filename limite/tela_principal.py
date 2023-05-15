@@ -4,14 +4,11 @@ class TelaPrincipal:
     def __init__(self, controlador_principal):
         self.__controlador_principal = controlador_principal
 
-    def entrada_usuario(self):
-        pass
-
     def lista_opcoes(self):
         print("*"*30)
         print("******* SISTEMA CADASTRO BABE *******")
         print("*"*30)
-        print("1 - login")
+        print("1 - Login")
         print("2 - Cadastro")
         print("0 - Sair")
         lista = [0, 1, 2]

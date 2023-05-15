@@ -19,19 +19,6 @@ class TelaAgenda:
     def imprimir(self, hora, consulta):
         print(f"{hora} : {consulta}")
 
-    def inclui(self, mensagem):
-        print(mensagem)
-
-    def exclui(self, mensagem):
-        print(mensagem)
-
-    def pega_cpf_cliente(self):
-        cpf = str(input("Digite aqui o seu cpf: "))
-        while len(cpf) != 11:
-            print("Digito invalido somente numeros")
-            cpf = str(input("Digite aqui o seu cpf: "))
-        return cpf
-
     def imprimir_consulta(self, consulta):
         print(consulta)
 

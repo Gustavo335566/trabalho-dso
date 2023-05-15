@@ -11,14 +11,18 @@ class TelaCliente:
             nome_comprimido = nome.replace(" ", "")
             if nome_comprimido.isalpha():
                 break
+            print("Nome invalido!")
         cpf = input("CPF: ")
         while len(cpf) != 11:
+            print("CPF invalido!")
             cpf = input("CPF: ")
-        telefone = input("Telefone: ")
+        telefone = input("Telefone [xx9xxxxxxxx]: ")
         while len(telefone) != 11:
-            telefone = input("Telefone: ")
+            print("Telefone invalido!")
+            telefone = input("Telefone [xx9xxxxxxxx]: ")
         sexo = input("Sexo [M/F]: ").upper()
         while sexo != "M" and sexo != "F":
+            print("Sexo invalido!")
             sexo = input("Sexo [M/F]: ").upper()
         return {"nome": nome, "cpf": cpf, "telefone": telefone, "sexo": sexo}
 
@@ -34,8 +38,8 @@ class TelaCliente:
         lista = [x for x in range(0, 5)]
         while True:
             valor = input("Digite a opcao: ")
-            if valor is None:
-                if valor in lista:
+            if valor.isdigit():
+                if int(valor) in lista:
                     return int(valor)
             print("Valor incorreto")
 
@@ -48,7 +52,6 @@ class TelaCliente:
         return observacao
 
     def mostra_cliente(self, dados_cliente):
-        print("-="*30)
         print("NOME:", dados_cliente["nome"], end=" | ")
         print("CPF:", dados_cliente["cpf"], end=" | ")
         print("TELEFONE:", dados_cliente["telefone"], end=" | ")
@@ -71,13 +74,14 @@ class TelaCliente:
                 if int(opcao) in lista:
                     return int(opcao)
             print("Valor incorreto")
+            input()
 
     def seleciona_cliente(self):
         cpf = input("CPF do cliente: ")
         while len(cpf) != 11:
             print("CPF invalido")
             if cpf.isalnum():
-                print("falta digitos")
+                print("Falta digitos")
             else:
                 print("Somente numeros")
             cpf = input("CPF do cliente: ")

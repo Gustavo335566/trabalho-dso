@@ -16,7 +16,7 @@ class Pessoa(ABC):
     @nome.setter
     def nome(self, nome: str):
         if isinstance(nome, str) and nome.replace(" ", "").isalpha():
-            self.__nome = nome
+            self.__nome = nome.title()
 
     @property
     def cpf(self):

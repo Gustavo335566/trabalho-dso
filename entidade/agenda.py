@@ -3,7 +3,7 @@
 class Agenda:
     def __init__(self, tempo_consulta: int):
         self.__minhas_consultas = {}
-        self.dias_semana(tempo_consulta) #um nome melhor para isso ex slots disponiveis
+        self.dias_semana(tempo_consulta)
         self.__tempo_consulta = tempo_consulta
 
     @property
@@ -23,18 +23,28 @@ class Agenda:
         cont = 0
         divisao = 60 / tempo_consulta
         tempos = round(divisao)
+        print(tempos)
         for i in range(8, 18):
             if cont >= 60:
                 cont = cont - 60
-            for j in range(0, int(tempos)):
+            for j in range(int(tempos)):
+                print("tempos")
                 if cont >= 60:
                     cont = cont - 60
                     break
                 if cont == 0:
+                    print("0")
                     horarios[f"{str(i)}:00"] = "vago"
                 else:
                     horarios[f"{str(i)}:{str(cont)}"] = "vago"
+                if int(tempos) == 1 and tempo_consulta != 60:
+                    cont += tempo_consulta
+                    if cont >= 60:
+                        cont = cont - 60
+                        break
+                    horarios[f"{str(i)}:{str(cont)}"] = "vago"
                 cont += tempo_consulta
+        print(horarios)
         return horarios
 
     def dias_semana(self, tempo_consulta):

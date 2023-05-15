@@ -25,6 +25,7 @@ class ControladorAgenda:
                 self.__tela_agenda.mostra_mensagem(f"{consulta} cadastrada com sucesso")
         else:
             self.__tela_agenda.mostra_mensagem("Cliente nao cadastrado")
+        input()
 
     def exclui_consulta(self, usuario):
         consulta = self.__controlador_principal.controlador_consulta.exclui_consulta()
@@ -36,6 +37,7 @@ class ControladorAgenda:
                         self.__tela_agenda.mostra_mensagem("Consulta excluida")
         else:
             self.__tela_agenda.mostra_mensagem(consulta)
+        input()
 
     def pega_consulta_por_cpf(self):
         cliente = self.__controlador_principal.controlador_cliente.pega_cliente_por_cpf()
@@ -49,6 +51,7 @@ class ControladorAgenda:
                 if not isinstance(v, str):
                     if v.codigo == codigo:
                         self.__tela_agenda.imprimir_consulta(v)
+        input()
 
     def mostrar_horarios(self, usuario):
         self.__tela_agenda.mostra_mensagem("-------Minhas consultas------")
@@ -56,6 +59,7 @@ class ControladorAgenda:
             self.__tela_agenda.mostra_mensagem(data)
             for hora, consulta in horarios.items():
                 self.__tela_agenda.imprimir(hora, consulta)
+        input()
 
     def menu_agenda(self, usuario):
         switcher = {1: self.inclui_consulta,

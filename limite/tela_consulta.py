@@ -16,12 +16,11 @@ class TelaConsulta:
                     break
             print("Valor incorreto")
         while True:
-            horario = input("Horario Consulta X:XX: ")
+            horario = input("Horario Consulta [x:xx]: ")
             if horario in usuario.agenda.minhas_consultas[datas_consulta[data]].keys():
                 break
             print("Horario nao consta na agenda, coloque outro valor")
         return {"cliente": cliente, "data": datas_consulta[data], "horario": horario}
-
 
     def mostra_dados_consulta(self, dados_consulta: dict):
         print("CÓD:", dados_consulta["codigo"], end=" | ")

@@ -39,6 +39,7 @@ class ControladorPrincipal:
 
     def teste_login(self):
         if len(self.__controlador_usuario.todos_usuarios) == 0:
+            self.__tela_principal.mostra_mensagem("Nenhum usuario cadastrado! Abrindo cadastramento")
             self.__controlador_usuario.cadastro_usuario()
         else:
             nome_usuario, senha_usuario = self.__tela_principal.tela_login()
