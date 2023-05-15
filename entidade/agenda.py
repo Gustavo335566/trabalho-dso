@@ -23,17 +23,14 @@ class Agenda:
         cont = 0
         divisao = 60 / tempo_consulta
         tempos = round(divisao)
-        print(tempos)
         for i in range(8, 18):
             if cont >= 60:
                 cont = cont - 60
             for j in range(int(tempos)):
-                print("tempos")
                 if cont >= 60:
                     cont = cont - 60
                     break
                 if cont == 0:
-                    print("0")
                     horarios[f"{str(i)}:00"] = "vago"
                 else:
                     horarios[f"{str(i)}:{str(cont)}"] = "vago"
@@ -44,7 +41,6 @@ class Agenda:
                         break
                     horarios[f"{str(i)}:{str(cont)}"] = "vago"
                 cont += tempo_consulta
-        print(horarios)
         return horarios
 
     def dias_semana(self, tempo_consulta):

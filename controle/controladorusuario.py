@@ -45,14 +45,16 @@ class ControladorUsuario:
         palavra = self.__tela_usuario.palavra_chave()
         if palavra == "adm123":
             for i in self.__usuarios:
-                if usuario == i:
+                if usuario.cpf == i.cpf:
                     self.__usuarios.remove(i)
                     mensagem = "Usuario excluido com sucesso"
                     self.__tela_usuario.mostra_mensagem(mensagem)
-                    break
+                    return True
             mensagem = "Usuario nao foi achado ou ja foi excluido"
             self.__tela_usuario.mostra_mensagem(mensagem)
+            return False
         self.__tela_usuario.mostra_mensagem("Palavra chave incorreta")
+        return False
 
     def historico_sistema(self):
         historico = self.__controlador_principal.controlador_consulta.historico_consultas
@@ -77,7 +79,12 @@ class ControladorUsuario:
             elif opcao == 2 or opcao == 7:
                 funcao_escolhida()
             else:
-                funcao_escolhida(usuario)
+                if opcao == 5:
+                    verificacao = funcao_escolhida(usuario)
+                    if verificacao:
+                        break
+                else:
+                    funcao_escolhida(usuario)
 
     def calculo_financeiro(self, usuario):
         calculo = len(usuario.relatorio) * usuario.preco_consulta
