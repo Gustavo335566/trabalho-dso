@@ -74,7 +74,7 @@ class ControladorConsulta:
         self.lista_consultas()
         codigo = self.__tela_consulta.seleciona_consulta()
         consulta = self.pega_consulta_por_codigo(codigo)
-        if consulta is not None:
+        if consulta is not str:
             self.__historico_consultas.append(f"{consulta} removido com sucesso")
             self.__tela_consulta.mostra_mensagem(f"{consulta} removido com sucesso")
             self.__todas_consultas.remove(consulta)
