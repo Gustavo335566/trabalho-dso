@@ -54,7 +54,8 @@ class ControladorAgenda:
             self.__tela_agenda.mostra_mensagem(data)
             for hora, consulta in horarios.items():
                 self.__tela_agenda.imprimir(hora, consulta)
-        input()
+            self.__tela_agenda.no_lado()
+        self.__tela_agenda.stop()
 
     def menu_agenda(self, usuario):
         switcher = {1: self.inclui_consulta,

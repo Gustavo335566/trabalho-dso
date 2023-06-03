@@ -57,9 +57,6 @@ class ControladorClientes:
         cliente = self.pega_cliente_por_cpf()
         if cliente is not str and isinstance(cliente, Cliente):
             valores = {1: "nome", 2: "cpf", 3: "telefone", 4: "sexo", 0: 0}
-            valores_lista = ["1 - Nome", "2 - CPF", "3 - Telefone", "4 - Sexo", "0 - Voltar"]
-            for valor in valores_lista:
-                self.__tela_clientes.mostra_mensagem(valor)
             while True:
                 valor_escolhido = self.__tela_clientes.pega_valor()
                 valor = valores[valor_escolhido]
@@ -68,13 +65,14 @@ class ControladorClientes:
                     break
                 novo_valor = self.__tela_clientes.pega_novo_valor()
                 cliente.atualiza_atributo(valor, novo_valor)
-                if cliente.nome != novo_valor and valor_escolhido == 1:
+                if (cliente.nome != novo_valor.title()) and valor_escolhido == 1:
+                    print(cliente.nome, novo_valor)
                     self.__tela_clientes.mostra_mensagem("Valor invalido, somente letras")
                 elif cliente.cpf != novo_valor and valor_escolhido == 2:
                     self.__tela_clientes.mostra_mensagem("Valor invalido, somente numeros")
                 elif cliente.telefone != novo_valor and valor_escolhido == 3:
                     self.__tela_clientes.mostra_mensagem("Valor invalido, somente somente numeros")
-                elif cliente.sexo != novo_valor and valor_escolhido == 4:
+                elif cliente.sexo != novo_valor.upper() and valor_escolhido == 4:
                     self.__tela_clientes.mostra_mensagem("Valor invalido, somente m ou f")
                 else:
                     self.__tela_clientes.mostra_mensagem(cliente.nome + " Alteracao feita com sucesso")
