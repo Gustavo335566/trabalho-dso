@@ -53,51 +53,61 @@ class ControladorClientes:
         input()
 
     def altera_cliente(self):
-        self.lista_clientes()
-        cliente = self.pega_cliente_por_cpf()
-        if cliente is not str and isinstance(cliente, Cliente):
-            valores = {1: "nome", 2: "cpf", 3: "telefone", 4: "sexo", 0: 0}
-            while True:
-                valor_escolhido = self.__tela_clientes.pega_valor()
-                valor = valores[valor_escolhido]
-                print(valor)
-                if not isinstance(valor, str):
-                    break
-                novo_valor = self.__tela_clientes.pega_novo_valor()
-                cliente.atualiza_atributo(valor, novo_valor)
-                if (cliente.nome != novo_valor.title()) and valor_escolhido == 1:
-                    print(cliente.nome, novo_valor)
-                    self.__tela_clientes.mostra_mensagem("Valor invalido, somente letras")
-                elif cliente.cpf != novo_valor and valor_escolhido == 2:
-                    self.__tela_clientes.mostra_mensagem("Valor invalido, somente numeros")
-                elif cliente.telefone != novo_valor and valor_escolhido == 3:
-                    self.__tela_clientes.mostra_mensagem("Valor invalido, somente somente numeros")
-                elif cliente.sexo != novo_valor.upper() and valor_escolhido == 4:
-                    self.__tela_clientes.mostra_mensagem("Valor invalido, somente m ou f")
-                else:
-                    self.__tela_clientes.mostra_mensagem(cliente.nome + " Alteracao feita com sucesso")
-                input()
+        if len(self.clientes) > 0:
+            self.lista_clientes()
+            cliente = self.pega_cliente_por_cpf()
+            if cliente is not str and isinstance(cliente, Cliente):
+                valores = {1: "nome", 2: "cpf", 3: "telefone", 4: "sexo", 0: 0}
+                while True:
+                    valor_escolhido = self.__tela_clientes.pega_valor()
+                    valor = valores[valor_escolhido]
+                    print(valor)
+                    if not isinstance(valor, str):
+                        break
+                    novo_valor = self.__tela_clientes.pega_novo_valor()
+                    cliente.atualiza_atributo(valor, novo_valor)
+                    if (cliente.nome != novo_valor.title()) and valor_escolhido == 1:
+                        print(cliente.nome, novo_valor)
+                        self.__tela_clientes.mostra_mensagem("Valor invalido, somente letras")
+                    elif cliente.cpf != novo_valor and valor_escolhido == 2:
+                        self.__tela_clientes.mostra_mensagem("Valor invalido, somente numeros")
+                    elif cliente.telefone != novo_valor and valor_escolhido == 3:
+                        self.__tela_clientes.mostra_mensagem("Valor invalido, somente somente numeros")
+                    elif cliente.sexo != novo_valor.upper() and valor_escolhido == 4:
+                        self.__tela_clientes.mostra_mensagem("Valor invalido, somente m ou f")
+                    else:
+                        self.__tela_clientes.mostra_mensagem(cliente.nome + " Alteracao feita com sucesso")
+        else:
+            self.__tela_clientes.mostra_mensagem('não há clientes cadastrados')
+        input()
 
     def exclui_cliente(self):
-        self.lista_clientes()
-        cliente = self.pega_cliente_por_cpf()
-        autenticacao = self.__controlador_principal.controlador_consulta.pega_codigo_por_cliente(cliente)
-        if autenticacao is str:
-            if cliente is not str:
-                self.__clientes.remove(cliente)
-                self.__tela_clientes.mostra_mensagem(f"{cliente} removido com sucesso")
+        if len(self.clientes) > 0:
+            self.lista_clientes()
+            cliente = self.pega_cliente_por_cpf()
+            autenticacao = self.__controlador_principal.controlador_consulta.pega_codigo_por_cliente(cliente)
+            if autenticacao is str:
+                if cliente is not str:
+                    self.__clientes.remove(cliente)
+                    self.__tela_clientes.mostra_mensagem(f"{cliente} removido com sucesso")
+                else:
+                    self.__tela_clientes.mostra_mensagem("!!!! CPF NÃO CADASTRADO !!!!")
             else:
-                self.__tela_clientes.mostra_mensagem("!!!! CPF NÃO CADASTRADO !!!!")
+                self.__tela_clientes.mostra_mensagem("Ha consultas marcadas com esse cliente")
         else:
-            self.__tela_clientes.mostra_mensagem("Ha consultas marcadas com esse cliente")
+            self.__tela_clientes.mostra_mensagem('não há clientes para excluir')
+        input()
 
     def mostra_historico_cliente(self):
-        self.lista_clientes()
-        cliente = self.pega_cliente_por_cpf()
-        if cliente is not str:
-            self.__tela_clientes.mostra_mensagem(cliente.historico)
+        if len(self.clientes) > 0:
+            self.lista_clientes()
+            cliente = self.pega_cliente_por_cpf()
+            if cliente is not str:
+                self.__tela_clientes.mostra_mensagem(cliente.historico)
+            else:
+                self.__tela_clientes.mostra_mensagem(cliente)
         else:
-            self.__tela_clientes.mostra_mensagem(cliente)
+            self.__tela_clientes.mostra_mensagem('não há clientes para se ver o historico')
         input()
 
     def mostra_menu_clientes(self):
