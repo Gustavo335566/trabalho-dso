@@ -1,5 +1,6 @@
 from entidade.usuario import Usuario
 from limite.tela_usuario import TelaUsuario
+from controle.controlador_agenda import ControladorAgenda
 
 
 class ControladorUsuario:
@@ -93,20 +94,23 @@ class ControladorUsuario:
         input()
 
     def consulta_feita(self, usuario):
-        cliente = self.__controlador_principal.controlador_cliente.pega_cliente_por_cpf()
-        codigo_consulta_escolhida = self.__controlador_principal.controlador_consulta.pega_codigo_por_cliente(cliente)
-        if not isinstance(cliente, str):
-            for data, horarios in usuario.agenda.minhas_consultas.items():
-                for hora, consulta in horarios.items():
-                    if consulta != "vago":
-                        if consulta.cliente == cliente:
-                            if codigo_consulta_escolhida == consulta.codigo:
-                                usuario.relatorio.append(consulta)
-                                adicione_historico = self.__controlador_principal.controlador_cliente\
-                                    .adicionar_no_historico(consulta, usuario)
-                                self.__controlador_principal.controlador_consulta.historico_consultas.append(adicione_historico)
+        if self.se_tem_consultas(usuario) == True:
+            cliente = self.__controlador_principal.controlador_cliente.pega_cliente_por_cpf()
+            codigo_consulta_escolhida = self.__controlador_principal.controlador_consulta.pega_codigo_por_cliente(cliente)
+            if not isinstance(cliente, str):
+                for data, horarios in usuario.agenda.minhas_consultas.items():
+                    for hora, consulta in horarios.items():
+                        if consulta != "vago":
+                            if consulta.cliente == cliente:
+                                if codigo_consulta_escolhida == consulta.codigo:
+                                    usuario.relatorio.append(consulta)
+                                    adicione_historico = self.__controlador_principal.controlador_cliente\
+                                        .adicionar_no_historico(consulta, usuario)
+                                    self.__controlador_principal.controlador_consulta.historico_consultas.append(adicione_historico)
+            else:
+                self.__tela_usuario.mostra_mensagem(cliente)
         else:
-            self.__tela_usuario.mostra_mensagem(cliente)
+            self.__tela_usuario.mostra_mensagem('não há consultas')
         input()
 
     def mudanca_telefone(self, usuario):
@@ -154,3 +158,14 @@ class ControladorUsuario:
             if i == usuario:
                 self.__tela_usuario.imprimir_dados_usuario(usuario)
         input()
+
+    def se_tem_consultas(self, usuario):
+        cont = False
+        for k, v in usuario.agenda.minhas_consultas.items():
+            for hora, disponibilidade in v.items():
+                if disponibilidade != 'vago':
+                    cont = True
+        if cont:
+            return cont
+        else:
+            return None

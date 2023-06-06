@@ -23,15 +23,18 @@ class ControladorAgenda:
         input()
 
     def exclui_consulta(self, usuario):
-        consulta = self.__controlador_principal.controlador_consulta.exclui_consulta()
-        if consulta is not str:
-            for data, horarios in usuario.agenda.minhas_consultas.items():
-                for hora, v in horarios.items():
-                    if consulta == v:
-                        horarios[hora] = "vago"
-                        self.__tela_agenda.mostra_mensagem("Consulta excluida")
+        if self.se_tem_consultas(usuario):
+            consulta = self.__controlador_principal.controlador_consulta.exclui_consulta()
+            if consulta is not str:
+                for data, horarios in usuario.agenda.minhas_consultas.items():
+                    for hora, v in horarios.items():
+                        if consulta == v:
+                            horarios[hora] = "vago"
+                            self.__tela_agenda.mostra_mensagem("Consulta excluida")
+            else:
+                self.__tela_agenda.mostra_mensagem(consulta)
         else:
-            self.__tela_agenda.mostra_mensagem(consulta)
+            self.__tela_agenda.mostra_mensagem('não há consultas para excluir')
         input()
 
     def pega_consulta_por_cpf(self):
@@ -40,12 +43,22 @@ class ControladorAgenda:
         return codigo
 
     def procura_consulta(self, usuario):
-        cliente = self.__controlador_principal.controlador_cliente.pega_cliente_por_cpf()
-        for data, horarios in usuario.agenda.minhas_consultas.items():
-            for hora, consulta in horarios.items():
-                if not isinstance(consulta, str):
-                    if consulta.cliente == cliente:
-                        self.__tela_agenda.imprimir_consulta(consulta)
+        if self.__controlador_principal.controlador_cliente.numero_clientes() > 0:
+            cont = True
+            cliente = self.__controlador_principal.controlador_cliente.pega_cliente_por_cpf()
+            for data, horarios in usuario.agenda.minhas_consultas.items():
+                for hora, consulta in horarios.items():
+                    if not isinstance(consulta, str):
+                        if consulta.cliente == cliente:
+                            cont = False
+                            self.__tela_agenda.imprimir_consulta(consulta)
+            if cont:
+                self.__tela_agenda.mostra_mensagem('não consultas com esse cpf')
+            input()
+        elif self.se_tem_consultas(usuario) == None:
+            self.__tela_agenda.mostra_mensagem('não há consultas cadastradas')
+        else:
+            self.__tela_agenda.mostra_mensagem("não há clientes cadastrados")
         input()
 
     def mostrar_horarios(self, usuario):
@@ -54,7 +67,8 @@ class ControladorAgenda:
             self.__tela_agenda.mostra_mensagem(data)
             for hora, consulta in horarios.items():
                 self.__tela_agenda.imprimir(hora, consulta)
-        input()
+            self.__tela_agenda.no_lado()
+        self.__tela_agenda.stop()
 
     def menu_agenda(self, usuario):
         switcher = {1: self.inclui_consulta,
@@ -67,3 +81,14 @@ class ControladorAgenda:
                 break
             funcao_escolhida = switcher[opcao]
             funcao_escolhida(usuario)
+
+    def se_tem_consultas(self, usuario):
+        cont = False
+        for k, v in usuario.agenda.minhas_consultas.items():
+            for hora, disponibilidade in v.items():
+                if disponibilidade != 'vago':
+                    cont = True
+        if cont:
+            return cont
+        else:
+            return None

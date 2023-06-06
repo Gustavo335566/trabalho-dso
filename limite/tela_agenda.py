@@ -24,3 +24,9 @@ class TelaAgenda:
 
     def mostra_mensagem(self, mensagem):
         print(mensagem)
+
+    def no_lado(self):
+        print("", end="")
+
+    def stop(self):
+        input()

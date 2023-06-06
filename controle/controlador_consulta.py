@@ -2,7 +2,6 @@ from entidade.consulta import Consulta
 from controle.controlador_cliente import ControladorClientes
 from limite.tela_consulta import TelaConsulta
 
-#deixa eu testar isso no pc
 class ControladorConsulta:
     def __init__(self, controlador_principal):
         self.__controlador_principal = controlador_principal
