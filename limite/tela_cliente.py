@@ -1,47 +1,11 @@
+import PySimpleGUI as sg
+from validate_docbr import CPF
 
 
 class TelaCliente:
     def __init__(self, controlador):
         self.__controlador = controlador
-
-    def pega_dados_cliente(self):
-        print("****** CADASTRO CLIENTE ******")
-        while True:
-            nome = input("Nome: ").title()
-            nome_comprimido = nome.replace(" ", "")
-            if nome_comprimido.isalpha():
-                break
-            print("Nome invalido!")
-        cpf = input("CPF: ")
-        while len(cpf) != 11:
-            print("CPF invalido!")
-            cpf = input("CPF: ")
-        telefone = input("Telefone [xx9xxxxxxxx]: ")
-        while len(telefone) != 11:
-            print("Telefone invalido!")
-            telefone = input("Telefone [xx9xxxxxxxx]: ")
-        sexo = input("Sexo [M/F]: ").upper()
-        while sexo != "M" and sexo != "F":
-            print("Sexo invalido!")
-            sexo = input("Sexo [M/F]: ").upper()
-        return {"nome": nome, "cpf": cpf, "telefone": telefone, "sexo": sexo}
-
-    def pega_valor(self):
-        print("*" * 30)
-        print("******** ALTERAR CLIENTE ********")
-        print("*" * 30)
-        print("1 - Nome")
-        print("2 - CPF")
-        print("3 - Telefone")
-        print("4 - Sexo")
-        print("0 - Voltar")
-        lista = [x for x in range(0, 5)]
-        while True:
-            valor = input("Digite a opcao: ")
-            if valor.isdigit():
-                if int(valor) in lista:
-                    return int(valor)
-            print("Valor incorreto")
+        self.__window = None
 
     def pega_novo_valor(self):
         novo = input("Novo valor: ")
@@ -51,41 +15,100 @@ class TelaCliente:
         observacao = input("Observação: ")
         return observacao
 
-    def mostra_cliente(self, dados_cliente):
-        print("NOME:", dados_cliente["nome"], end=" | ")
-        print("CPF:", dados_cliente["cpf"], end=" | ")
-        print("TELEFONE:", dados_cliente["telefone"], end=" | ")
-        print("SEXO:", dados_cliente["sexo"])
+    def dados_cliente(self, dados_cliente):
+        cpf = CPF()
+        layout = [[sg.Text(f'NOME:{dados_cliente["nome"]}', size=(40, 1), font="Arial")],
+                  [sg.Text(f'CPF: {cpf.mask(dados_cliente["cpf"])}', size=(40, 1), font="Arial")],
+                  [sg.Text(f'TELEFONE: {dados_cliente["telefone"]}', size=(40, 1), font="Arial")],
+                  [sg.Text(f'SEXO: {dados_cliente["sexo"]}', size=(40, 1), font="Arial")],
+                  [sg.Button("Voltar"), sg.Button("Excluir Cliente", key="-BT_EXCLUIR_CLIENTE-"),
+                   sg.Button("Alterar Cliente")]
+                  ]
+        self.__window = sg.Window("Menu Clientes").Layout(layout)
 
-    def lista_opcoes(self):
-        print("*"*30)
-        print("******** MENU CLIENTES ********")
-        print("*"*30)
-        print("1 - Cadastrar Cliente")
-        print("2 - Listar Clientes")
-        print("3 - Alterar Cliente")
-        print("4 - Excluir Cliente")
-        print("5 - Histórico Cliente")
-        print("0 - Voltar")
-        lista = [1, 2, 3, 4, 5, 0]
+    def open_dados_cliente(self, dados_cliente):
+        self.dados_cliente(dados_cliente)
         while True:
-            opcao = input("Escolha a opcao: ")
-            if opcao.isdigit():
-                if int(opcao) in lista:
-                    return int(opcao)
-            print("Valor incorreto")
-            input()
+            event, value = self.__window.read()
+            if event == "Voltar" or event == sg.WIN_CLOSED:
+                break
+            elif event == "-BT_EXCLUIR_CLIENTE-":
+                self.__controlador.exclui_cliente(dados_cliente["cpf"])
+                self.close()
+            print(event, value)
+        self.close()
 
-    def seleciona_cliente(self):
-        cpf = input("CPF do cliente: ")
-        while len(cpf) != 11:
-            print("CPF invalido")
-            if cpf.isalnum():
-                print("Falta digitos")
+    def open(self):
+        self.init_components()
+        while True:
+            event, value = self.__window.read()
+            if event == "Voltar" or event == sg.WIN_CLOSED:
+                break
+            elif event == "-BT_CADASTRAR_CLIENTE-":
+                self.__window.close()
+                self.open_tela_cadastro()
+            elif event == "-BT_BUSCAR-":
+                self.__window.close()
+                self.__controlador.busca_cliente(value["-IT_BUSCA-"])
             else:
-                print("Somente numeros")
-            cpf = input("CPF do cliente: ")
-        return cpf
+                self.__window.close()
+                self.__controlador.busca_cliente(event)
+            print(event, value)
+        self.close()
 
-    def mostra_mensagem(self, msg):
-        print(msg)
+    def init_components(self):
+        sg.theme("DarkBrown")
+        lista_botao = self.__controlador.listar_clientes()
+        layout = [[sg.Text("MENU CLIENTES", size=(40, 2), font="Arial")],
+                  [sg.Button("Cadastrar Cliente", key="-BT_CADASTRAR_CLIENTE-"), sg.Push(),
+                   sg.InputText(key="-IT_BUSCA-", tooltip="Digite o CPF"), sg.Submit("Buscar", key="-BT_BUSCAR-")],
+                  [lista_botao],
+                  [sg.Button("Voltar")]
+                  ]
+        self.__window = sg.Window("Menu Clientes").Layout(layout)
+
+    def tela_cadastro(self):
+        sg.theme("DarkBrown")
+        layout = [[sg.Text("Digite seu nome", size=(40, 2), font="Arial")],
+                  [sg.Text("Nome", size=(15, 1)), sg.InputText(key="-IT_NOME-")],
+                  [sg.Text("CPF", size=(15, 1)), sg.InputText(key="-IT_CPF-")],
+                  [sg.Text("TELEFONE", size=(15,1)), sg.InputText(key="-IT_TELEFONE-")],
+                  [sg.Frame(layout=[
+                      [sg.Radio("M", "RADIO1", size=(10, 1), key="it_masc"),
+                       sg.Radio("F", "RADIO1", size=(10, 1), key="it_fem")]],
+                      title="Sexo", relief=sg.RELIEF_SUNKEN, )],
+                  [sg.Submit("Finalizar cadastro"), sg.Button("Voltar")]
+                  ]
+        self.__window = sg.Window("Cadastro Cliente").Layout(layout)
+
+    def open_tela_cadastro(self):
+        self.tela_cadastro()
+        while True:
+            event, value = self.__window.read()
+            if event == "Voltar" or event == sg.WIN_CLOSED:
+                break
+            elif event == "Finalizar cadastro":
+                if not (value["-IT_NOME-"].replace(" ", "")).isalpha():
+                    self.mostra_mensagem("Valor Invalido", "ATENÇÃO: FORMATO DE NOME INVALIDO")
+                else:
+                    cpf = CPF()
+                    if not cpf.validate(cpf.mask(value["-IT_CPF-"])):
+                        self.mostra_mensagem("Valor Invalido", "ATENÇÃO: CPF NÃO EXISTE")
+                    else:
+                        if len(value["-IT_TELEFONE-"]) != 11:
+                            self.mostra_mensagem("Valor Invalido", "ATENÇÃO: FORMATO DE TELEFONE INVALIDO")
+                        else:
+                            if value["it_masc"]:
+                                sexo = "M"
+                            else:
+                                sexo = "F"
+                            self.__controlador.incluir_cliente({"nome": value["-IT_NOME-"], "cpf": value["-IT_CPF-"],
+                                                               "telefone": value["-IT_TELEFONE-"], "sexo": sexo})
+                            break
+        self.close()
+
+    def close(self):
+        self.__window.close()
+
+    def mostra_mensagem(self, titulo: str, mensagem: str):
+        sg.Popup(titulo, mensagem)

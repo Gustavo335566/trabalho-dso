@@ -3,8 +3,8 @@
 class Agenda:
     def __init__(self, tempo_consulta: int):
         self.__minhas_consultas = {}
-        self.dias_semana(tempo_consulta)
-        self.__tempo_consulta = tempo_consulta
+        self.dias_semana(int(tempo_consulta))
+        self.__tempo_consulta = int(tempo_consulta)
 
     @property
     def minhas_consultas(self):
@@ -16,7 +16,7 @@ class Agenda:
 
     @tempo_consulta.setter
     def tempo_consulta(self, tempo_consulta: int):
-        self.__tempo_consulta = tempo_consulta
+        self.__tempo_consulta = int(tempo_consulta)
 
     def personalizar_horarios(self, tempo_consulta):
         horarios = {}

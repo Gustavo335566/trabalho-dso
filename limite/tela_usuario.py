@@ -1,6 +1,90 @@
+import PySimpleGUI as sg
+from validate_docbr import CPF
 
 
 class TelaUsuario:
+    def __init__(self, controlador):
+        self.__controlador = controlador
+        self.__window = None
+
+    def init_components(self):
+        sg.theme("DarkBrown")
+        lista_botao = self.__controlador.listar_clientes()
+        layout = [[sg.Text("MENU USUARIO", size=(40, 2), font="Arial")],
+                  [sg.Button("", key="-BT_CADASTRAR_CLIENTE-"), sg.Push(),
+                   sg.InputText(key="-IT_BUSCA-", tooltip="Digite o CPF"), sg.Submit("Buscar", key="-BT_BUSCAR-")],
+                  [lista_botao],
+                  [sg.Button("Voltar")]
+                  ]
+        self.__window = sg.Window("Menu Clientes").Layout(layout)
+
+    def tela_cadastro_usuario(self):
+        sg.theme("DarkBrown")
+        layout = [[sg.Text("Cadastro Usuario", size=(40, 2), font="Arial")],
+                  [sg.Text("Nome", size=(15, 1)), sg.InputText(key="-IT_NOME-")],
+                  [sg.Text("CPF", size=(15, 1)), sg.InputText(key="-IT_CPF-")],
+                  [sg.Text("TELEFONE", size=(15,1)), sg.InputText(key="-IT_TELEFONE-")],
+                  [sg.Text("Nome usuario", size=(15, 1)), sg.InputText(key="-IT_NOME_USUARIO-")],
+                  [sg.Text("Senha usuario", size=(15, 1)), sg.InputText(key="-IT_SENHA_USUARIO-")],
+                  [sg.Text("Tempo da consulta", size=(15, 1)), sg.InputText(key="-IT_TEMPO-")],
+                  [sg.Text("Preço da consulta", size=(15, 1)), sg.InputText(key="-IT_PRECO-")],
+                  [sg.Frame(layout=[
+                      [sg.Radio("M", "RADIO1", size=(10, 1), key="it_masc"),
+                       sg.Radio("F", "RADIO1", size=(10, 1), key="it_fem")]],
+                      title="Sexo", relief=sg.RELIEF_SUNKEN, )],
+                  [sg.Submit("Finalizar cadastro"), sg.Button("Voltar")]
+                  ]
+        self.__window = sg.Window("Cadastro Usuario").Layout(layout)
+
+    def open_tela_cadastro_usuario(self):
+        self.tela_cadastro_usuario()
+        while True:
+            event, value = self.__window.read()
+            if event == "Voltar" or event == sg.WIN_CLOSED:
+                break
+            elif event == "Finalizar cadastro":
+                if not (value["-IT_NOME-"].replace(" ", "")).isalpha():
+                    self.mostra_mensagem("Atencao", "FORMATO DE NOME INVALIDO")
+                else:
+                    cpf = CPF()
+                    if not cpf.validate(cpf.mask(value["-IT_CPF-"])):
+                        self.mostra_mensagem("Atencao", "CPF NÃO EXISTE")
+                    else:
+                        if len(value["-IT_TELEFONE-"]) != 11:
+                            self.mostra_mensagem("Atencao", "FORMATO DE TELEFONE INVALIDO")
+                        else:
+                            if value["it_masc"]:
+                                sexo = "M"
+                            else:
+                                sexo = "F"
+                                if (value["-IT_NOME_USUARIO-"].isalpha() is False or len(value["-IT_NOME_USUARIO-"])< 8
+                                        or len(value["-IT_NOME_USUARIO-"]) > 20):
+                                    self.mostra_mensagem("Atencao", "NOME DE USUARIO INVALIDO")
+                                else:
+                                    if (value["-IT_SENHA_USUARIO-"].isalnum() is False
+                                            or value["-IT_SENHA_USUARIO-"].isdigit() is True
+                                            or value["-IT_SENHA_USUARIO-"].isalpha()
+                                            or len(value["-IT_SENHA_USUARIO-"]) < 8
+                                            or len(value["-IT_SENHA_USUARIO-"]) > 16):
+                                        self.mostra_mensagem("Atencao", "SENHA DE USUARIO INVALIDA")
+                                    else:
+                                        if value["-IT_TEMPO-"] < 10 or value["-IT_TEMPO-"] > 60:
+                                            self.mostra_mensagem("Atencao", "TEMPO DE CONSULTA INVALIDO")
+                                        else:
+                                            if not (value["-IT_PRECO-"] > 0):
+                                                self.mostra_mensagem("Atencao", "PRECO DA CONSULTA INVALIDO")
+
+                            self.__controlador.cadastro_usuario({"nome": value["-IT_NOME-"], "cpf": value["-IT_CPF-"],
+                                                                 "telefone": value["-IT_TELEFONE-"], "sexo": sexo,
+                                                                 "nome_usuario": value["-IT_NOME_USUARIO-"],
+                                                                 "senha_usuario": value["-IT_SENHA_USUARIO-"],
+                                                                 "tempo_consulta": int(value["-IT_TEMPO-"]),
+                                                                 "preco_consulta": int(value["-IT_PRECO-"])})
+                            break
+        self.close()
+
+
+
     def tela_opcoes(self):
         print("------USUARIO--------")
         print("1 - Agenda")
@@ -62,8 +146,11 @@ class TelaUsuario:
             preco_consulta = float(input("Preco da consulta: "))
         return nome, nome_usuario, cpf, senha_usuario, sexo, telefone, tempo_consulta, preco_consulta
 
-    def mostra_mensagem(self, mensagem):
-        print(mensagem)
+    def close(self):
+        self.__window.close()
+
+    def mostra_mensagem(self, titulo: str, mensagem: str):
+        sg.Popup(titulo, mensagem)
 
     def mudanca_dados_usuario(self):
         print("Atencao digite apenas um dado de cada vez que voce queira alterar")

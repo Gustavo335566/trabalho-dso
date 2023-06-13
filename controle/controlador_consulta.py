@@ -3,17 +3,17 @@ from controle.controlador_cliente import ControladorClientes
 from limite.tela_consulta import TelaConsulta
 
 class ControladorConsulta:
+    __CONTADOR_CODIGO = 1000
     def __init__(self, controlador_principal):
         self.__controlador_principal = controlador_principal
         self.__historico_consultas = []
         self.__todas_consultas = []
         self.__tela_consulta = TelaConsulta(self)
-        self.__contador_codigo = 1000
         #ADICIONAR CONSULTA AO HISTORICO
 
     @property
     def contador_codigo(self):
-        return self.__contador_codigo
+        return self.__CONTADOR_CODIGO
 
     @property
     def todas_consultas(self):
@@ -21,6 +21,12 @@ class ControladorConsulta:
 
     def add_consulta(self, consulta):
         self.__todas_consultas.append(consulta)
+
+    def verifica_se_tem_consulta(self, cliente):
+        for consulta in self.__todas_consultas:
+            if consulta.cliente == cliente:
+                return True
+        return False
 
     def pega_codigo_por_cliente(self, cliente):
         for consulta in self.todas_consultas:
@@ -44,8 +50,8 @@ class ControladorConsulta:
     def cadastrar_consulta(self, usuario):
         existe_cliente = False
         existe = True
-        self.__contador_codigo += 1
-        codigo = self.__contador_codigo
+        self.__CONTADOR_CODIGO += 1
+        codigo = self.__CONTADOR_CODIGO
         dados_consulta = self.__tela_consulta.pega_dados_consulta(self.__controlador_principal.controlador_cliente.pega_cliente_por_cpf(), usuario)
         for cl in self.__controlador_principal.controlador_cliente.clientes:
             if dados_consulta["cliente"] == cl:
