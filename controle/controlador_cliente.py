@@ -1,19 +1,18 @@
 from entidade.cliente import Cliente
 from limite.tela_cliente import TelaCliente
+from persistencia.cliente_dao import ClienteDAO
+import PySimpleGUI as sg
 
 
 class ControladorClientes:
     def __init__(self, controlador_principal):
         self.__controlador_principal = controlador_principal
-        self.__clientes = []
+        self.__cliente_dao = ClienteDAO()
         self.__tela_clientes = TelaCliente(self)
 
-    @property
-    def clientes(self):
-        return self.__clientes
-
     def numero_clientes(self):
-        numero_clientes = len(self.__clientes)
+        lista_clientes = self.__cliente_dao.get_all()
+        numero_clientes = len(lista_clientes)
         return numero_clientes
 
     def adicionar_no_historico(self, consulta, usuario):
@@ -21,39 +20,45 @@ class ControladorClientes:
         consulta.cliente.historico.append(f"{consulta.data} | {consulta.horario} | {usuario.preco_consulta} | {usuario.nome} | {observacao} ")
         return f"{consulta.data} | {consulta.horario} | {usuario.preco_consulta} | {usuario.nome} | {observacao} "
 
-    def pega_cliente_por_cpf(self):
-        cpf_cliente = self.__tela_clientes.seleciona_cliente()
-        for cliente in self.__clientes:
+    def pega_cliente_por_cpf(self, cpf_cliente):
+        for cliente in self.__cliente_dao.get_all():
             if cliente.cpf == cpf_cliente:
                 return cliente
-        return "CPF NAO CADASTRADO"
+        return False
 
-    def incluir_cliente(self):
-        dados_cliente = self.__tela_clientes.pega_dados_cliente()
-        for cliente in self.__clientes:
-            if dados_cliente["cpf"] == cliente.cpf:
-                self.__tela_clientes.mostra_mensagem("!!!! CPF JÁ CADASTRADO !!!!")
-                return None
-        cliente = Cliente(dados_cliente["nome"], dados_cliente["cpf"],
-                          dados_cliente["telefone"], dados_cliente["sexo"])
-        for var, att in cliente.__dict__.items():
-            if att is None:
-                self.__tela_clientes.mostra_mensagem(f"VALOR DE {var.upper()} INVÁLIDO")
-                del cliente
-                return None
-        self.__clientes.append(cliente)
-        self.__tela_clientes.mostra_mensagem(f"{cliente} cadastrado com sucesso!")
-        input()
+    def pega_cpf_do_cliente(self, cliente):
 
-    def lista_clientes(self):
-        self.__tela_clientes.mostra_mensagem("****** LISTA DE CLIENTES ******")
-        for cliente in self.__clientes:
-            self.__tela_clientes.mostra_cliente({"nome": cliente.nome, "cpf": cliente.cpf,
-                                                 "telefone": cliente.telefone, "sexo": cliente.sexo})
-        input()
+        return cliente.cpf
+
+    def busca_cliente(self, cpf_cliente):
+        cliente = self.pega_cliente_por_cpf(cpf_cliente)
+        if not cliente:
+            self.__tela_clientes.mostra_mensagem("Atencao", "CPF NAO CADASTRADO")
+        else:
+            self.__tela_clientes.open_dados_cliente({"nome": cliente.nome, "cpf": cliente.cpf,
+                                                     "telefone": cliente.telefone, "sexo": cliente.sexo})
+
+    def incluir_cliente(self, dados_cliente):
+        existe = False
+        for cliente in self.__cliente_dao.get_all():
+            if cliente.cpf == dados_cliente["cpf"]:
+                existe = True
+        if not existe:
+            cliente = Cliente(dados_cliente["nome"], dados_cliente["cpf"],
+                              dados_cliente["telefone"], dados_cliente["sexo"])
+            self.__cliente_dao.add(cliente.cpf, cliente)
+            self.__tela_clientes.mostra_mensagem("Cadastro Feito", f"{cliente} cadastrado com sucesso!")
+        else:
+            self.__tela_clientes.mostra_mensagem("Atencao", "CPF JA CADASTRADO NO SISTEMA")
+        return None
+
+    def listar_clientes(self):
+        lista_botao = [[sg.Button(f'{cliente.cpf} {cliente.nome}',
+                        key=cliente.cpf)] for cliente in self.__cliente_dao.get_all()]
+        return lista_botao
 
     def altera_cliente(self):
-        if len(self.clientes) > 0:
+        if len(self.__cliente_dao.get_all()) > 0:
             self.lista_clientes()
             cliente = self.pega_cliente_por_cpf()
             if cliente is not str and isinstance(cliente, Cliente):
@@ -81,22 +86,15 @@ class ControladorClientes:
             self.__tela_clientes.mostra_mensagem('não há clientes cadastrados')
         input()
 
-    def exclui_cliente(self):
-        if len(self.clientes) > 0:
-            self.lista_clientes()
-            cliente = self.pega_cliente_por_cpf()
-            autenticacao = self.__controlador_principal.controlador_consulta.pega_codigo_por_cliente(cliente)
-            if autenticacao is str:
-                if cliente is not str:
-                    self.__clientes.remove(cliente)
-                    self.__tela_clientes.mostra_mensagem(f"{cliente} removido com sucesso")
-                else:
-                    self.__tela_clientes.mostra_mensagem("!!!! CPF NÃO CADASTRADO !!!!")
-            else:
-                self.__tela_clientes.mostra_mensagem("Ha consultas marcadas com esse cliente")
+    def exclui_cliente(self, cpf_cliente):
+        cliente = self.pega_cliente_por_cpf(cpf_cliente)
+        autenticacao = self.__controlador_principal.controlador_consulta.verifica_se_tem_consulta(cliente)
+        if not autenticacao:
+            if cliente is not str:
+                self.__cliente_dao.remove(cliente.cpf)
+                self.__tela_clientes.mostra_mensagem("Cliente Removido", f"{cliente} removido com sucesso")
         else:
-            self.__tela_clientes.mostra_mensagem('não há clientes para excluir')
-        input()
+            self.__tela_clientes.mostra_mensagem("Atencao", "Ha consultas marcadas com esse cliente")
 
     def mostra_historico_cliente(self):
         if len(self.clientes) > 0:
@@ -110,15 +108,9 @@ class ControladorClientes:
             self.__tela_clientes.mostra_mensagem('não há clientes para se ver o historico')
         input()
 
-    def mostra_menu_clientes(self):
-        lista_opcoes = {1: self.incluir_cliente, 2: self.lista_clientes, 3: self.altera_cliente,
-                        4: self.exclui_cliente, 5: self.mostra_historico_cliente, 0: 0}
-        while True:
-            opcao = self.__tela_clientes.lista_opcoes()
-            if opcao == 0:
-                break
-            try:
-                funcao = lista_opcoes[opcao]
-                funcao()
-            except ValueError:
-                self.__tela_clientes.mostra_mensagem("OPÇÃO INVALIDA")
+    def abrir_tela(self):
+        self.__tela_clientes.open()
+
+    @property
+    def tela_clientes(self):
+        return self.__tela_clientes
