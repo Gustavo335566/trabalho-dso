@@ -27,7 +27,6 @@ class ControladorClientes:
         return False
 
     def pega_cpf_do_cliente(self, cliente):
-
         return cliente.cpf
 
     def busca_cliente(self, cpf_cliente):
@@ -114,3 +113,7 @@ class ControladorClientes:
     @property
     def tela_clientes(self):
         return self.__tela_clientes
+
+    @property
+    def cliente_dao(self):
+        return self.__cliente_dao

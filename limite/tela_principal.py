@@ -17,19 +17,25 @@ class TelaPrincipal:
                 self.__controlador_principal.controlador_cliente.abrir_tela()
                 self.__window.un_hide()
             elif event == "-BT_AGENDA-":
-                pass
+                self.__window.hide()
+                self.__controlador_principal.controlador_agenda.abrir_tela()
+                self.__window.un_hide()
             elif event == "-BT_USUARIO-":
-                pass
+                self.__window.hide()
+                self.__controlador_principal.controlador_usuario.abrir_tela()
+                self.__window.un_hide()
             print(event, value)
         self.close()
 
     def init_components(self):
         sg.theme("DarkBrown")
-        layout = [[sg.Text("MENU INICIAL", size=(40, 2), pad=((135, 0), 3), font=("Arial Bold", 18))],
-                  [sg.Button("Agenda", key="-BT_AGENDA-", size=(15, 1), pad=((140, 0), 3))],
-                  [sg.Button("Clientes", key="-BT_CLIENTE-", size=(15, 1), pad=((140, 0), 3))],
-                  [sg.Button("Usuario", key="-BT_USUARIO-", size=(15, 1), pad=((140, 0), 3))],
-                  [sg.Cancel("Sair", size=(15, 1), pad=((140, 0), 3))]
+        nome_usuario = self.__controlador_principal.controlador_usuario.pega_dados_usuario()["nome"]
+        layout = [[sg.Text("MENU INICIAL", size=(40, 1), font=("Arial Bold", 18), justification="center")],
+                  [sg.Text(f"Bem-vindo, {nome_usuario} ", size=(30, 2), font=("Arial Bold", 15))],
+                  [sg.Push(), sg.Button("Agenda", key="-BT_AGENDA-", size=(15, 1)), sg.Push()],
+                  [sg.Push(), sg.Button("Clientes", key="-BT_CLIENTE-", size=(15, 1)), sg.Push()],
+                  [sg.Push(), sg.Button("Usuario", key="-BT_USUARIO-", size=(15, 1)), sg.Push()],
+                  [sg.Push(), sg.Cancel("Sair", size=(15, 1)), sg.Push()]
                   ]
         self.__window = sg.Window("Tela Principal", size=(420, 280)).Layout(layout)
 

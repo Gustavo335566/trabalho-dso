@@ -9,25 +9,35 @@ class TelaUsuario:
 
     def init_components(self):
         sg.theme("DarkBrown")
-        lista_botao = self.__controlador.listar_clientes()
         layout = [[sg.Text("MENU USUARIO", size=(40, 2), font="Arial")],
-                  [sg.Button("", key="-BT_CADASTRAR_CLIENTE-"), sg.Push(),
-                   sg.InputText(key="-IT_BUSCA-", tooltip="Digite o CPF"), sg.Submit("Buscar", key="-BT_BUSCAR-")],
-                  [lista_botao],
+                  [sg.Push(), sg.Button("DADOS DO USUARIO", key="-BT_DADOS_USUARIO-"), sg.Push()],
+                  [sg.Push(), sg.Button("RELATORIO FINANCEIRO", key="-BT_FINANCEIRO-"), sg.Push()],
                   [sg.Button("Voltar")]
                   ]
-        self.__window = sg.Window("Menu Clientes").Layout(layout)
+        self.__window = sg.Window("Menu Clientes", size=(420, 280)).Layout(layout)
+
+    def open(self):
+        self.init_components()
+        while True:
+            event, value = self.__window.read()
+            if event == "Voltar" or event == sg.WIN_CLOSED:
+                break
+            elif event == "-BT_DADOS_USUARIO-":
+                self.open_dados_usuario()
+            elif event == "-BT_FINANCEIRO-":
+                self.__controlador.calculo_financeiro()
+        self.close()
 
     def tela_cadastro_usuario(self):
         sg.theme("DarkBrown")
-        layout = [[sg.Text("Cadastro Usuario", size=(40, 2), font="Arial")],
-                  [sg.Text("Nome", size=(15, 1)), sg.InputText(key="-IT_NOME-")],
+        layout = [[sg.Text("CADASTRO DO USUARIO", size=(40, 2), font="Arial")],
+                  [sg.Text("NOME", size=(15, 1)), sg.InputText(key="-IT_NOME-")],
                   [sg.Text("CPF", size=(15, 1)), sg.InputText(key="-IT_CPF-")],
                   [sg.Text("TELEFONE", size=(15,1)), sg.InputText(key="-IT_TELEFONE-")],
-                  [sg.Text("Nome usuario", size=(15, 1)), sg.InputText(key="-IT_NOME_USUARIO-")],
-                  [sg.Text("Senha usuario", size=(15, 1)), sg.InputText(key="-IT_SENHA_USUARIO-")],
-                  [sg.Text("Tempo da consulta", size=(15, 1)), sg.InputText(key="-IT_TEMPO-")],
-                  [sg.Text("Preço da consulta", size=(15, 1)), sg.InputText(key="-IT_PRECO-")],
+                  [sg.Text("NOME DE USUARIO", size=(15, 1)), sg.InputText(key="-IT_NOME_USUARIO-")],
+                  [sg.Text("SENHA DE USUARIO", size=(15, 1)), sg.InputText(key="-IT_SENHA_USUARIO-")],
+                  [sg.Text("TEMPO DA CONSULTA", size=(15, 1)), sg.InputText(key="-IT_TEMPO-")],
+                  [sg.Text("PREÇO DA CONSULTA", size=(15, 1)), sg.InputText(key="-IT_PRECO-")],
                   [sg.Frame(layout=[
                       [sg.Radio("M", "RADIO1", size=(10, 1), key="it_masc"),
                        sg.Radio("F", "RADIO1", size=(10, 1), key="it_fem")]],
@@ -83,68 +93,20 @@ class TelaUsuario:
                             break
         self.close()
 
+    def dados_usuario(self, dados_usuario):
+        cpf = CPF()
+        layout = [[sg.Text(f'NOME:{dados_usuario["nome"]}', size=(40, 1), font="Arial")],
+                  [sg.Text(f'CPF: {cpf.mask(dados_usuario["cpf"])}', size=(40, 1), font="Arial")],
+                  [sg.Text(f'TELEFONE: {dados_usuario["telefone"]}', size=(40, 1), font="Arial")],
+                  [sg.Text(f'SEXO: {dados_usuario["sexo"]}', size=(40, 1), font="Arial")],
+                  [sg.Text(f'PREÇO DA CONSULTA: {dados_usuario["preco"]}', size=(40, 1), font="Arial")],
+                  [sg.Button("Voltar"), sg.Button("Alterar Usuario")]
+                  ]
+        self.__window = sg.Window("Menu Clientes").Layout(layout)
 
-
-    def tela_opcoes(self):
-        print("------USUARIO--------")
-        print("1 - Agenda")
-        print("2 - Cliente")
-        print("3 - Consulta feita")
-        print("4 - Alterar dados do usuario")
-        print("5 - Ver dados usuario")
-        print("6 - Excluir meu usuario")
-        print("7 - Relatorio financeiro")
-        print("8 - Historico do sistema")
-        print("0 - Logout")
-        lista = [1, 2, 3, 4, 5, 6, 7, 8, 0]
-        while True:
-            opcao = input("Escolha a opcao: ")
-            if opcao.isdigit():
-                if int(opcao) in lista:
-                    return int(opcao)
-            print("Valor incorreto")
-
-    def pega_dados_usuario(self):
-        nome_completo = str(input("Digite o seu nome: ")).capitalize()
-        nome = nome_completo.replace(" ", "")
-        while nome.isalpha() is False:
-            print("O nome so pode conter letras")
-            nome_completo = str(input("Digite o seu nome: "))
-            nome = nome_completo.replace(" ", "")
-        cpf = str(input("Digite o seu cpf: "))
-        while cpf.isdigit() is False or len(cpf) != 11:
-            print("CPF invalido")
-            cpf = input("Digite o seu cpf: ")
-        print("O nome de usuario pode conter somente letras e tem que ter de 8 a 20 caracteres, sem espacos.")
-        nome_usuario = str(input("Digite o seu nome de usuario: "))
-        while nome_usuario.isalpha() is False or len(nome_usuario) < 8 or len(nome_usuario) > 20:
-            print("Somente letras e tamanho de nome do usuario de 8 a 20 caracteres")
-            nome_usuario = str(input("Digite o nome do seu usuario: "))
-        print("Senha letras e numeros, tamanho da senha de 8 a 16 algarismo")
-        senha_usuario = str(input("Digite uma senha: "))
-        while senha_usuario.isalnum() is False or senha_usuario.isdigit() is True\
-                or senha_usuario.isalpha() or len(senha_usuario) < 8 or len(senha_usuario) > 16:
-            print("Senha letras e numeros, tamanho da senha de 8 a 16 algarismo")
-            senha_usuario = str(input("Digite uma senha: "))
-        sexo = input("Digite o seu sexo [m/f]: ")
-        while True:
-            if sexo.upper() in "M" or sexo.upper() in "F":
-                break
-            print("Somente M ou F")
-            sexo = input("Digite o seu sexo [m/f]: ")
-        telefone = str(input("Digite o seu telefone no formato xx9xxxxxxxx: "))
-        while telefone.isdigit() is False or len(telefone) != 11:
-            print("Telefone invalido!")
-            telefone = str(input("Digite o seu telefone no formato xx9xxxxxxxx: "))
-        tempo_consulta = int(input("Tempo de consulta: "))
-        while tempo_consulta > 60 or tempo_consulta < 10:
-            print("Tempo de consulta somente em minutos, de 10min a 60min")
-            tempo_consulta = int(input("Tempo de consulta: "))
-        preco_consulta = float(input("Preco da consulta: "))
-        while not preco_consulta > 0:
-            print("Preco invalido!")
-            preco_consulta = float(input("Preco da consulta: "))
-        return nome, nome_usuario, cpf, senha_usuario, sexo, telefone, tempo_consulta, preco_consulta
+    def open_dados_usuario(self):
+        dados_usuario = self.__controlador.pega_dados_usuario()
+        self.dados_usuario(dados_usuario)
 
     def close(self):
         self.__window.close()
@@ -232,7 +194,3 @@ class TelaUsuario:
     def palavra_chave(self):
         palavra = str(input("Digite a palavra chave: "))
         return palavra
-
-    def imprimir_dados_usuario(self, usuario):
-        print(f"Nome:{usuario.nome} | Sexo:{usuario.sexo} | Telefone: {usuario.telefone} |"
-              f"CPF:{usuario.cpf} | Preco Consulta: {usuario.preco_consulta}")

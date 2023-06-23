@@ -1,15 +1,18 @@
 from entidade.consulta import Consulta
 from limite.tela_agenda import TelaAgenda
+from persistencia.minhas_consultas_dao import MinhasConsultasDAO
 
 
 class ControladorAgenda:
     def __init__(self, controlador_principal):
         self.__controlador_principal = controlador_principal
-        self.__tela_agenda = TelaAgenda()
+        self.__tela_agenda = TelaAgenda(self)
+        self.__minhas_consultas_dao = MinhasConsultasDAO()
 
-    def inclui_consulta(self, usuario):
+    def inclui_consulta(self):
+        usuario = self.__controlador_principal.controlador_usuario.usuario_logado
         if self.__controlador_principal.controlador_cliente.numero_clientes() > 0:
-            consulta = self.__controlador_principal.controlador_consulta.cadastrar_consulta(usuario)
+            consulta = self.__controlador_principal.controlador_consulta.cadastrar_consulta()
             self.__controlador_principal.controlador_consulta.add_consulta(consulta)
             if isinstance(consulta, Consulta):
                 for data, horarios in usuario.agenda.minhas_consultas.items():
@@ -17,10 +20,11 @@ class ControladorAgenda:
                         for k, v in horarios.items():
                             if v == "vago" and k == consulta.horario:
                                 horarios[k] = consulta
+                self.__controlador_principal.controlador_usuario.atualiza_agenda_usuario(usuario.agenda.minhas_consultas)
                 self.__tela_agenda.mostra_mensagem(f"{consulta} cadastrada com sucesso")
+                self.__tela_agenda.open()
         else:
             self.__tela_agenda.mostra_mensagem("Cliente nao cadastrado")
-        input()
 
     def exclui_consulta(self, usuario):
         if self.se_tem_consultas(usuario):
@@ -61,26 +65,25 @@ class ControladorAgenda:
             self.__tela_agenda.mostra_mensagem("não há clientes cadastrados")
         input()
 
-    def mostrar_horarios(self, usuario):
-        self.__tela_agenda.mostra_mensagem("-------Minhas consultas------")
-        for data, horarios in usuario.agenda.minhas_consultas.items():
-            self.__tela_agenda.mostra_mensagem(data)
-            for hora, consulta in horarios.items():
-                self.__tela_agenda.imprimir(hora, consulta)
-            self.__tela_agenda.no_lado()
-        self.__tela_agenda.stop()
-
-    def menu_agenda(self, usuario):
-        switcher = {1: self.inclui_consulta,
-                    2: self.exclui_consulta,
-                    3: self.mostrar_horarios,
-                    4: self.procura_consulta}
-        while True:
-            opcao = self.__tela_agenda.menu_agenda()
-            if opcao == 0:
-                break
-            funcao_escolhida = switcher[opcao]
-            funcao_escolhida(usuario)
+    def mostrar_horarios(self):
+        linha_horarios = []
+        horarios_do_usuario = self.__controlador_principal.controlador_usuario.usuario_logado.agenda.minhas_consultas
+        i = 0
+        for data, horarios in horarios_do_usuario.items():
+            linha = []
+            lista_horarios = [hora for hora in horarios.keys()]
+            lista_consultas = [consulta for consulta in horarios.values()]
+        for hora in lista_horarios:
+            lista_horarios = []
+            lista_consultas_na_hora = []
+            lista_consultas_na_hora.append(hora)
+            for consulta in lista_consultas:
+                if isinstance(consulta, str):
+                    lista_consultas_na_hora.append(consulta)
+                else:
+                    lista_consultas_na_hora.append(consulta.codigo)
+            linha_horarios.append(lista_consultas_na_hora)
+        return linha_horarios
 
     def se_tem_consultas(self, usuario):
         cont = False
@@ -92,3 +95,10 @@ class ControladorAgenda:
             return cont
         else:
             return None
+
+    def abrir_tela(self):
+        self.__tela_agenda.open()
+
+    @property
+    def tela_agenda(self):
+        return self.__tela_agenda

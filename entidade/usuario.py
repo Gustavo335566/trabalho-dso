@@ -4,17 +4,23 @@ from entidade.consulta import Consulta
 
 
 class Usuario(Pessoa):
-    def __init__(self, nome: str, cpf: str, telefone: str, sexo: str, nome_usuario: str, senha_usuario: str,  tempo_consulta: int, preco_consulta: float):
+    def __init__(self, nome: str, cpf: str, telefone: str, sexo: str, nome_usuario: str, senha_usuario: str,  tempo_consulta: int, preco_consulta: float, cargo: str = "Funcionario"):
         super().__init__(nome, cpf, telefone, sexo)
         self.__relatorio = []
         self.__nome_usuario = nome_usuario
         self.__senha_usuario = senha_usuario
         self.__preco_consulta = preco_consulta
+        self.__tempo_consulta = tempo_consulta
+        self.__cargo = cargo
         self.__agenda = Agenda(tempo_consulta)
 
     @property
     def agenda(self):
         return self.__agenda
+
+    @agenda.setter
+    def agenda(self, agenda: Agenda):
+        self.__agenda = agenda
 
     @property
     def nome_usuario(self):
@@ -42,6 +48,15 @@ class Usuario(Pessoa):
     def preco_consulta(self, preco_consulta: float):
         if isinstance(preco_consulta, float):
             self.__preco_consulta = preco_consulta
+
+    @property
+    def tempo_consulta(self):
+        return self.__tempo_consulta
+
+    @tempo_consulta.setter
+    def tempo_consulta(self, tempo_consulta:int):
+        if isinstance(tempo_consulta, int):
+            self.__tempo_consulta = tempo_consulta
 
     @property
     def relatorio(self):

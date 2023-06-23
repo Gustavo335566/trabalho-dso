@@ -24,7 +24,7 @@ class TelaCliente:
                   [sg.Button("Voltar"), sg.Button("Excluir Cliente", key="-BT_EXCLUIR_CLIENTE-"),
                    sg.Button("Alterar Cliente")]
                   ]
-        self.__window = sg.Window("Menu Clientes").Layout(layout)
+        self.__window = sg.Window("Menu Clientes", size=(420, 280)).Layout(layout)
 
     def open_dados_cliente(self, dados_cliente):
         self.dados_cliente(dados_cliente)
@@ -37,6 +37,7 @@ class TelaCliente:
                 self.close()
             print(event, value)
         self.close()
+
 
     def open(self):
         self.init_components()
@@ -59,13 +60,14 @@ class TelaCliente:
     def init_components(self):
         sg.theme("DarkBrown")
         lista_botao = self.__controlador.listar_clientes()
-        layout = [[sg.Text("MENU CLIENTES", size=(40, 2), font="Arial")],
+        layout = [[sg.Text("MENU CLIENTES", size=(40, 2), font=("Arial", 18), justification="center")],
                   [sg.Button("Cadastrar Cliente", key="-BT_CADASTRAR_CLIENTE-"), sg.Push(),
-                   sg.InputText(key="-IT_BUSCA-", tooltip="Digite o CPF"), sg.Submit("Buscar", key="-BT_BUSCAR-")],
+                   sg.InputText(key="-IT_BUSCA-", size=(11, 1), tooltip="Digite o CPF"),
+                   sg.Submit("Buscar", key="-BT_BUSCAR-")],
                   [lista_botao],
-                  [sg.Button("Voltar")]
+                  [sg.Button("Voltar", )]
                   ]
-        self.__window = sg.Window("Menu Clientes").Layout(layout)
+        self.__window = sg.Window("Menu Clientes", size=(420, 280)).Layout(layout)
 
     def tela_cadastro(self):
         sg.theme("DarkBrown")

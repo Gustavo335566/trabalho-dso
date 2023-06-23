@@ -9,6 +9,7 @@ class ControladorUsuario:
         self.__tela_usuario = TelaUsuario(self)
         self.__usuario_dao = UsuarioDAO()
         self.__controlador_principal = controlador_principal
+        self.__usuario_logado = None
 
     @property
     def usuario_dao(self):
@@ -18,13 +19,13 @@ class ControladorUsuario:
         for usuario in self.__usuario_dao.get_all():
             while usuario.nome_usuario == dados_usuario["nome_usuario"]:
                 self.__tela_usuario.mostra_mensagem("nome de usuario ja usado, coloque outro")
-                nome_usuario = self.__tela_usuario.pega_nome_usuario()
-            while i.cpf == dados_usuario["cpf"]:
+                nome_usuario = self .__tela_usuario.pega_nome_usuario()
+            while usuario.cpf == dados_usuario["cpf"]:
                 self.__tela_usuario.mostra_mensagem("CPF ja usado no usuario, voce ja possui usuario")
                 cpf = self.__tela_usuario.pega_cpf_usuario()
         usuario = Usuario(dados_usuario["nome"], dados_usuario["cpf"], dados_usuario["telefone"],
                           dados_usuario["sexo"], dados_usuario["nome_usuario"], dados_usuario["senha_usuario"],
-                          dados_usuario["tempo_consulta"], dados_usuario["preco_consulta"])
+                          dados_usuario["tempo_consulta"], dados_usuario["preco_consulta"], "Funcionario")
         self.__usuario_dao.add(usuario.cpf, usuario)
         mensagem = "cadastro realizado com sucesso"
         self.__tela_usuario.mostra_mensagem("Aviso", mensagem)
@@ -64,35 +65,9 @@ class ControladorUsuario:
             self.__tela_usuario.mostra_mensagem(i)
         input()
 
-    def menu_usuario(self, usuario: Usuario):
-        switcher = {1: self.__controlador_principal.controlador_agenda.menu_agenda,
-                    2: self.__controlador_principal.controlador_cliente.mostra_menu_clientes,
-                    3: self.consulta_feita,
-                    4: self.alterar_dados_usuario,
-                    5: self.imprimir_dados_usuario,
-                    6: self.exclui_meu_usuario,
-                    7: self.calculo_financeiro,
-                    8: self.historico_sistema,
-                    0: 0}
-        while True:
-            opcao = self.__tela_usuario.tela_opcoes()
-            funcao_escolhida = switcher[opcao]
-            if opcao == 0:
-                break
-            elif opcao == 2 or opcao == 8:
-                funcao_escolhida()
-            else:
-                if opcao == 5:
-                    verificacao = funcao_escolhida(usuario)
-                    if verificacao:
-                        break
-                else:
-                    funcao_escolhida(usuario)
-
-    def calculo_financeiro(self, usuario):
-        calculo = len(usuario.relatorio) * usuario.preco_consulta
-        self.__tela_usuario.mostra_mensagem(str(calculo))
-        input()
+    def calculo_financeiro(self):
+        calculo = len(self.__usuario_logado.relatorio) * self.__usuario_logado.preco_consulta
+        self.__tela_usuario.mostra_mensagem("Relatorio Financeiro", f"Total ganho: R${calculo:.2f}")
 
     def consulta_feita(self, usuario):
         if self.se_tem_consultas(usuario):
@@ -142,23 +117,12 @@ class ControladorUsuario:
         sexo = self.__tela_usuario.pega_sexo()
         usuario.atualiza_atributo("sexo", sexo)
 
-    def alterar_dados_usuario(self, usuario):
-        switcher = {1: self.mudanca_telefone, 2: self.mudanca_preco, 3: self.mudanca_tempo_consulta,
-                    4: self.mudanca_nome, 5: self.mudanca_nome_usuario, 6: self.mudanca_senha_usuario,
-                    7: self.mudanca_sexo, 0: None}
-        while True:
-            opcao = self.__tela_usuario.mudanca_dados_usuario()
-            funcao_escolhida = switcher[opcao]
-            if opcao == 0:
-                break
-            else:
-                funcao_escolhida(usuario)
+    def pega_dados_usuario(self):
+        usuario = self.__usuario_logado
+        dados_usuario = {"nome": usuario.nome, "cpf": usuario.cpf,"telefone": usuario.telefone, "sexo": usuario.sexo,
+                         "preco": usuario.preco_consulta}
+        return dados_usuario
 
-    def imprimir_dados_usuario(self, usuario):
-        for i in self.__usuarios:
-            if i == usuario:
-                self.__tela_usuario.imprimir_dados_usuario(usuario)
-        input()
 
     def se_tem_consultas(self, usuario):
         cont = False
@@ -177,3 +141,11 @@ class ControladorUsuario:
     @property
     def tela_usuario(self):
         return self.__tela_usuario
+
+    @property
+    def usuario_logado(self):
+        return self.__usuario_logado
+
+    @usuario_logado.setter
+    def usuario_logado(self, usuario_logado):
+        self.__usuario_logado = usuario_logado

@@ -12,6 +12,7 @@ class ControladorLogin:
     def verifica_usuario(self, nome, senha):
         for usuario in self.__controlador_principal.controlador_usuario.usuario_dao.get_all():
             if usuario.nome_usuario == nome and usuario.senha_usuario == senha:
+                self.__controlador_principal.controlador_usuario.usuario_logado = usuario
                 return True
 
     @property
