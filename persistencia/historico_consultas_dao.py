@@ -5,8 +5,8 @@ class HistoricoConsultasDAO(DAO):
     def __init__(self):
         super().__init__('historico_consultas.pkl')
 
-    def add(self, chave, observacao: str):
-        if isinstance(observacao, str) and observacao is not None:
+    def add(self, chave: str, observacao: str):
+        if isinstance(observacao, str) and observacao is not None and isinstance(chave, str) and chave is not None:
             super().add(chave, observacao)
 
     def get(self, key):

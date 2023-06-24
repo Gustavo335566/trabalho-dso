@@ -6,8 +6,8 @@ class TelaAgenda:
         self.__controlador = controlador
         self.__window = None
 
-    def open(self):
-        self.init_components()
+    def open(self, linha_horarios: list):
+        self.init_components(linha_horarios)
         while True:
             event, value = self.__window.read()
             if event == "Voltar" or event == sg.WIN_CLOSED:
@@ -19,12 +19,11 @@ class TelaAgenda:
 
 
 
-    def init_components(self):
+    def init_components(self, linha_horarios):
         sg.theme("DarkBrown")
-        valores = self.__controlador.mostrar_horarios()
         headings = ["Hora", "Segunda", "Terça", "Quarta", "Quinta", "Sexta"]
         layout = [[sg.Text("AGENDA", size=(40, 1), font=("Arial Bold", 18), justification="center")],
-                  [sg.Table(values=valores, headings=headings, justification="center", key="-TABLE-")],
+                  [sg.Table(values=linha_horarios, headings=headings, justification="center", key="-TABLE-")],
                   [sg.Button("Voltar"), sg.Push(), sg.Button("Cadastrar Consulta", key="-BT_CADASTRO_CONSULTA-")]
                   ]
         self.__window = sg.Window("Tela Principal", size=(420, 280), finalize=True).Layout(layout)

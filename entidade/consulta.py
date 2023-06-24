@@ -4,11 +4,11 @@ from entidade.cliente import Cliente
 class Consulta:
     __PROXIMO_CODIGO = 1000
 
-    def __init__(self, cliente: Cliente, data: int, horario: int):
+    def __init__(self, cliente: Cliente, data: str, horario: int):
         if isinstance(cliente, Cliente):
             self.__cliente = cliente
-        self.__PROXIMO_CODIGO += 1
-        self.__codigo = self.__PROXIMO_CODIGO
+        Consulta.__PROXIMO_CODIGO = Consulta.__PROXIMO_CODIGO + 1
+        self.__codigo = str(Consulta.__PROXIMO_CODIGO)
         self.__data = data
         self.__horario = horario
 
@@ -26,7 +26,7 @@ class Consulta:
 
     @codigo.setter
     def codigo(self, codigo: int):
-        self.__codigo = codigo
+        self.__codigo = str(codigo)
 
     @property
     def data(self):

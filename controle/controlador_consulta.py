@@ -73,18 +73,18 @@ class ControladorConsulta:
             self.__tela_consulta.mostra_dados_consulta({"codigo": consulta.codigo,
                                                         "cliente": consulta.cliente,
                                                         "data": consulta.data})
-
+    #exclui posteriormente
     def exclui_consulta(self):
-        self.lista_consultas()
-        codigo = self.__tela_consulta.seleciona_consulta()
-        consulta = self.pega_consulta_por_codigo(codigo)
-        if consulta is not str:
+        dia, hora = self.__tela_consulta.seleciona_consulta()
+        if dia == 'Segunda':
+            pass
+        '''if consulta is not str:
             self.__historico_consultas.add(consulta.codigo, f"{consulta} removido com sucesso")
             self.__tela_consulta.mostra_mensagem(f"{consulta} removido com sucesso")
             self.__todas_consultas.remove(consulta.codigo)
             return consulta
         else:
-            return "!!!! CONSULTA NÃO CADASTRADA !!!!"
+            return "!!!! CONSULTA NÃO CADASTRADA !!!!"'''
 
     @property
     def historico_consultas(self):

@@ -1,45 +1,32 @@
 from entidade.consulta import Consulta
 from limite.tela_agenda import TelaAgenda
-from persistencia.minhas_consultas_dao import MinhasConsultasDAO
 
 
 class ControladorAgenda:
     def __init__(self, controlador_principal):
         self.__controlador_principal = controlador_principal
         self.__tela_agenda = TelaAgenda(self)
-        self.__minhas_consultas_dao = MinhasConsultasDAO()
 
     def inclui_consulta(self):
         usuario = self.__controlador_principal.controlador_usuario.usuario_logado
         if self.__controlador_principal.controlador_cliente.numero_clientes() > 0:
             consulta = self.__controlador_principal.controlador_consulta.cadastrar_consulta()
-            self.__controlador_principal.controlador_consulta.add_consulta(consulta)
             if isinstance(consulta, Consulta):
-                for data, horarios in usuario.agenda.minhas_consultas.items():
-                    if data == consulta.data:
-                        for k, v in horarios.items():
-                            if v == "vago" and k == consulta.horario:
-                                horarios[k] = consulta
-                self.__controlador_principal.controlador_usuario.atualiza_agenda_usuario(usuario.agenda.minhas_consultas)
+                usuario.agenda.add_agenda(consulta)
                 self.__tela_agenda.mostra_mensagem(f"{consulta} cadastrada com sucesso")
-                self.__tela_agenda.open()
+                self.__tela_agenda.open(self.mostrar_horarios())
         else:
             self.__tela_agenda.mostra_mensagem("Cliente nao cadastrado")
 
     def exclui_consulta(self, usuario):
         if self.se_tem_consultas(usuario):
-            consulta = self.__controlador_principal.controlador_consulta.exclui_consulta()
-            if consulta is not str:
-                for data, horarios in usuario.agenda.minhas_consultas.items():
-                    for hora, v in horarios.items():
-                        if consulta == v:
-                            horarios[hora] = "vago"
-                            self.__tela_agenda.mostra_mensagem("Consulta excluida")
+            #consulta = self.__controlador_principal.controlador_consulta.exclui_consulta()
+            #dia e a hora
+            controle = usuario.agenda.remove_agenda(dia, hora)
+            if controle:
+                self.__tela_agenda.mostra_mensagem('exclusão alterada com sucesso')
             else:
-                self.__tela_agenda.mostra_mensagem(consulta)
-        else:
-            self.__tela_agenda.mostra_mensagem('não há consultas para excluir')
-        input()
+                self.__tela_agenda.mostra_mensagem('exclusão falhou')
 
     def pega_consulta_por_cpf(self):
         cliente = self.__controlador_principal.controlador_cliente.pega_cliente_por_cpf()
@@ -66,23 +53,8 @@ class ControladorAgenda:
         input()
 
     def mostrar_horarios(self):
-        linha_horarios = []
-        horarios_do_usuario = self.__controlador_principal.controlador_usuario.usuario_logado.agenda.minhas_consultas
-        i = 0
-        for data, horarios in horarios_do_usuario.items():
-            linha = []
-            lista_horarios = [hora for hora in horarios.keys()]
-            lista_consultas = [consulta for consulta in horarios.values()]
-        for hora in lista_horarios:
-            lista_horarios = []
-            lista_consultas_na_hora = []
-            lista_consultas_na_hora.append(hora)
-            for consulta in lista_consultas:
-                if isinstance(consulta, str):
-                    lista_consultas_na_hora.append(consulta)
-                else:
-                    lista_consultas_na_hora.append(consulta.codigo)
-            linha_horarios.append(lista_consultas_na_hora)
+        usuario = self.__controlador_principal.controlador_usuario.usuario_logado
+        linha_horarios = usuario.agenda.retorna_semana()
         return linha_horarios
 
     def se_tem_consultas(self, usuario):
@@ -97,7 +69,7 @@ class ControladorAgenda:
             return None
 
     def abrir_tela(self):
-        self.__tela_agenda.open()
+        self.__tela_agenda.open(self.mostrar_horarios())
 
     @property
     def tela_agenda(self):
