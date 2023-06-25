@@ -2,13 +2,10 @@ from entidade.cliente import Cliente
 
 
 class Consulta:
-    __PROXIMO_CODIGO = 1000
-
-    def __init__(self, cliente: Cliente, data: int, horario: int):
+    def __init__(self, cliente: Cliente, data: int, horario: int, codigo: int):
         if isinstance(cliente, Cliente):
             self.__cliente = cliente
-        self.__PROXIMO_CODIGO += 1
-        self.__codigo = self.__PROXIMO_CODIGO
+        self.__codigo = codigo
         self.__data = data
         self.__horario = horario
 

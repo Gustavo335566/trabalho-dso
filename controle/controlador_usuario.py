@@ -6,9 +6,9 @@ from controle.controlador_agenda import ControladorAgenda
 
 class ControladorUsuario:
     def __init__(self, controlador_principal):
+        self.__controlador_principal = controlador_principal
         self.__tela_usuario = TelaUsuario(self)
         self.__usuario_dao = UsuarioDAO()
-        self.__controlador_principal = controlador_principal
         self.__usuario_logado = None
 
     @property
@@ -26,6 +26,8 @@ class ControladorUsuario:
         usuario = Usuario(dados_usuario["nome"], dados_usuario["cpf"], dados_usuario["telefone"],
                           dados_usuario["sexo"], dados_usuario["nome_usuario"], dados_usuario["senha_usuario"],
                           dados_usuario["tempo_consulta"], dados_usuario["preco_consulta"], "Funcionario")
+        agenda = self.__controlador_principal.controlador_agenda.criar_agenda_usuario(usuario.cpf, usuario.tempo_consulta)
+        print(agenda)
         self.__usuario_dao.add(usuario.cpf, usuario)
         mensagem = "cadastro realizado com sucesso"
         self.__tela_usuario.mostra_mensagem("Aviso", mensagem)

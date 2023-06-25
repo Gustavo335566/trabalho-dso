@@ -13,6 +13,10 @@ class ControladorLogin:
         for usuario in self.__controlador_principal.controlador_usuario.usuario_dao.get_all():
             if usuario.nome_usuario == nome and usuario.senha_usuario == senha:
                 self.__controlador_principal.controlador_usuario.usuario_logado = usuario
+                print(usuario.cpf)
+                agenda = self.__controlador_principal.controlador_agenda.agenda_dao.get(usuario.cpf)
+                print(agenda)
+                self.__controlador_principal.controlador_agenda.agenda_usuario_logado = agenda
                 return True
 
     @property

@@ -8,12 +8,16 @@ from controle.controlador_login import ControladorLogin
 
 class ControladorPrincipal:
     def __init__(self):
+        self.__controlador_usuario = ControladorUsuario(self)
+        self.__controlador_agenda = ControladorAgenda(self)
+        self.__controlador_login = ControladorLogin(self)
         self.__controlador_cliente = ControladorClientes(self)
         self.__controlador_consulta = ControladorConsulta(self)
-        self.__controlador_agenda = ControladorAgenda(self)
-        self.__controlador_usuario = ControladorUsuario(self)
-        self.__controlador_login = ControladorLogin(self)
         self.__tela_principal = TelaPrincipal(self)
+
+    @property
+    def controlador_usuario(self):
+        return self.__controlador_usuario
 
     @property
     def controlador_cliente(self):
@@ -26,10 +30,6 @@ class ControladorPrincipal:
     @property
     def controlador_consulta(self):
         return self.__controlador_consulta
-
-    @property
-    def controlador_usuario(self):
-        return self.__controlador_usuario
 
     @property
     def controlador_login(self):

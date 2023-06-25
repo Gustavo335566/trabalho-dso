@@ -23,9 +23,11 @@ class TelaAgenda:
         sg.theme("DarkBrown")
         valores = self.__controlador.mostrar_horarios()
         headings = ["Hora", "Segunda", "Terça", "Quarta", "Quinta", "Sexta"]
-        layout = [[sg.Text("AGENDA", size=(40, 1), font=("Arial Bold", 18), justification="center")],
+        layout = [[sg.Text("AGENDA", size=(40, 1), font=("Arial Bold", 18), justification="center"),
+                   sg.InputText(size=(4,1)), sg.Button("Procurar Consulta", key="bt_procurar_consulta")],
                   [sg.Table(values=valores, headings=headings, justification="center", key="-TABLE-")],
-                  [sg.Button("Voltar"), sg.Push(), sg.Button("Cadastrar Consulta", key="-BT_CADASTRO_CONSULTA-")]
+                  [sg.Button("Voltar"), sg.Push(),
+                   sg.Button("Cadastrar Consulta", key="-BT_CADASTRO_CONSULTA-")]
                   ]
         self.__window = sg.Window("Tela Principal", size=(420, 280), finalize=True).Layout(layout)
 

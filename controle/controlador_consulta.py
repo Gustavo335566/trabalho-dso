@@ -49,13 +49,14 @@ class ControladorConsulta:
         existe_cliente = False
         existe = True
         usuario = self.__controlador_principal.controlador_usuario.usuario_logado
+        agenda = self.__controlador_principal.controlador_agenda.agenda_usuario_logado
         dados_consulta = self.__controlador_principal.controlador_agenda.tela_agenda.open_cadastro_consulta()
         cliente = self.__controlador_principal.controlador_cliente.pega_cliente_por_cpf(dados_consulta["cpf"])
         for cl in self.__controlador_principal.controlador_cliente.cliente_dao.get_all():
             if cliente == cl:
                 existe_cliente = True
         if existe_cliente:
-            for data, horarios in usuario.agenda.minhas_consultas.items():
+            for data, horarios in agenda.minhas_consultas.items():
                 for hora, valor in horarios.items():
                     if data == dados_consulta["data"]:
                         if hora == dados_consulta["hora"] and valor == "vago":
@@ -63,7 +64,8 @@ class ControladorConsulta:
             if existe:
                 self.__tela_consulta.mostra_mensagem("!!!!! HORÁRIO INDISPONÍVEL !!!!!")
             else:
-                consulta = Consulta(cliente, dados_consulta["data"], dados_consulta["hora"])
+                codigo = 1000 + len(self.__todas_consultas.get_all())
+                consulta = Consulta(cliente, dados_consulta["data"], dados_consulta["hora"], codigo)
                 self.__historico_consultas.add(consulta.codigo, f"{dados_consulta} adicionado")
                 self.__todas_consultas.add(consulta.codigo, consulta)
                 return consulta

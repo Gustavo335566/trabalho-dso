@@ -12,15 +12,6 @@ class Usuario(Pessoa):
         self.__preco_consulta = preco_consulta
         self.__tempo_consulta = tempo_consulta
         self.__cargo = cargo
-        self.__agenda = Agenda(tempo_consulta)
-
-    @property
-    def agenda(self):
-        return self.__agenda
-
-    @agenda.setter
-    def agenda(self, agenda: Agenda):
-        self.__agenda = agenda
 
     @property
     def nome_usuario(self):
