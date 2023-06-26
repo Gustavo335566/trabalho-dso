@@ -5,9 +5,9 @@ class AgendasDAO(DAO):
     def __init__(self):
         super().__init__('agendas.pkl')
 
-    def add(self, cpf_usuario, agenda):
-        if agenda is not None:
-            super().add(cpf_usuario, agenda)
+    def add(self, key, valor):
+        if key is not None:
+            super().add(key, valor)
 
     def get(self, key):
         return super().get(key)

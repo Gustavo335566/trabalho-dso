@@ -56,34 +56,13 @@ class ControladorClientes:
                         key=cliente.cpf)] for cliente in self.__cliente_dao.get_all()]
         return lista_botao
 
-    def altera_cliente(self):
-        if len(self.__cliente_dao.get_all()) > 0:
-            self.lista_clientes()
-            cliente = self.pega_cliente_por_cpf()
-            if cliente is not str and isinstance(cliente, Cliente):
-                valores = {1: "nome", 2: "cpf", 3: "telefone", 4: "sexo", 0: 0}
-                while True:
-                    valor_escolhido = self.__tela_clientes.pega_valor()
-                    valor = valores[valor_escolhido]
-                    print(valor)
-                    if not isinstance(valor, str):
-                        break
-                    novo_valor = self.__tela_clientes.pega_novo_valor()
-                    cliente.atualiza_atributo(valor, novo_valor)
-                    if (cliente.nome != novo_valor.title()) and valor_escolhido == 1:
-                        print(cliente.nome, novo_valor)
-                        self.__tela_clientes.mostra_mensagem("Valor invalido, somente letras")
-                    elif cliente.cpf != novo_valor and valor_escolhido == 2:
-                        self.__tela_clientes.mostra_mensagem("Valor invalido, somente numeros")
-                    elif cliente.telefone != novo_valor and valor_escolhido == 3:
-                        self.__tela_clientes.mostra_mensagem("Valor invalido, somente somente numeros")
-                    elif cliente.sexo != novo_valor.upper() and valor_escolhido == 4:
-                        self.__tela_clientes.mostra_mensagem("Valor invalido, somente m ou f")
-                    else:
-                        self.__tela_clientes.mostra_mensagem(cliente.nome + " Alteracao feita com sucesso")
-        else:
-            self.__tela_clientes.mostra_mensagem('não há clientes cadastrados')
-        input()
+    def alterar_cliente(self, dados_cliente):
+        cliente = self.pega_cliente_por_cpf(dados_cliente["cpf"])
+        if isinstance(cliente, Cliente):
+            cliente.nome = dados_cliente["nome"]
+            cliente.sexo = dados_cliente["sexo"]
+            cliente.telefone = dados_cliente["telefone"]
+            self.cliente_dao.add(cliente.cpf, cliente)
 
     def exclui_cliente(self, cpf_cliente):
         cliente = self.pega_cliente_por_cpf(cpf_cliente)
