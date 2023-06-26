@@ -6,9 +6,9 @@ class ClienteDAO(DAO):
     def __init__(self):
         super().__init__('clientes.pkl')
 
-    def add(self, chave, cliente: Cliente):
-        if isinstance(cliente, Cliente) and cliente is not None:
-            super().add(chave, cliente)
+    def add(self, key, valor):
+        if isinstance(valor, Cliente) and valor is not None:
+            super().add(key, valor)
 
     def get(self, key):
         return super().get(key)

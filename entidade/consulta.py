@@ -2,7 +2,7 @@ from entidade.cliente import Cliente
 
 
 class Consulta:
-    def __init__(self, cliente: Cliente, codigo: int, data: int, horario: int):
+    def __init__(self, cliente: Cliente, data: int, horario: int, codigo: int):
         if isinstance(cliente, Cliente):
             self.__cliente = cliente
         self.__codigo = codigo

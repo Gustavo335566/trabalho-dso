@@ -15,14 +15,15 @@ class TelaLogin:
                 break
             elif event == "Entrar":
                 existe = self.__controlador_login.verifica_usuario(value["-IT_USUARIO-"], value["-IT_SENHA-"])
+                if existe:
+                    self.__window.hide()
+                    self.__controlador_login.controlador_principal.abrir_tela()
+                    self.__window.un_hide()
+                elif not existe:
+                    self.mostra_mensagem("ERRO DE LOGIN",
+                                         "USUARIO NÃO ENCONTRADO, VERIFIQUE A SENHA OU NOME DE USUARIO")
             elif event == "Registrar":
                 self.open_registro_usuario()
-            if existe:
-                self.__window.hide()
-                self.__controlador_login.controlador_principal.abrir_tela()
-                self.__window.un_hide()
-            if not existe:
-                self.mostra_mensagem("ERRO DE LOGIN", "USUARIO NÃO ENCONTRADO, VERIFIQUE A SENHA OU NOME DE USUARIO")
         self.close()
 
     def init_components(self):

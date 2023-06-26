@@ -1,14 +1,19 @@
 
 
 class Agenda:
-    def __init__(self, tempo_consulta: int):
+    def __init__(self, tempo_consulta: int, codigo_atual=1000):
         self.__minhas_consultas = {}
         self.dias_semana(int(tempo_consulta))
         self.__tempo_consulta = int(tempo_consulta)
+        self.__codigo_atual = codigo_atual
 
     @property
     def minhas_consultas(self):
         return self.__minhas_consultas
+
+    @minhas_consultas.setter
+    def minhas_consultas(self, novas_consultas):
+        self.__minhas_consultas = novas_consultas
 
     @property
     def tempo_consulta(self):
@@ -17,6 +22,14 @@ class Agenda:
     @tempo_consulta.setter
     def tempo_consulta(self, tempo_consulta: int):
         self.__tempo_consulta = int(tempo_consulta)
+
+    @property
+    def codigo_atual(self):
+        return self.__codigo_atual
+
+    @codigo_atual.setter
+    def codigo_atual(self, novo_codigo):
+        self.__codigo_atual = novo_codigo
 
     def personalizar_horarios(self, tempo_consulta):
         horarios = {}

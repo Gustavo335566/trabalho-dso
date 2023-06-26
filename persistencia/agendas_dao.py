@@ -1,12 +1,12 @@
 from persistencia.dao import DAO
 
 
-class HistoricoConsultasDAO(DAO):
+class AgendasDAO(DAO):
     def __init__(self):
-        super().__init__('historico_consultas.pkl')
+        super().__init__('agendas.pkl')
 
-    def add(self, key, valor: str):
-        if isinstance(valor, str) and valor is not None:
+    def add(self, key, valor):
+        if key is not None:
             super().add(key, valor)
 
     def get(self, key):
