@@ -18,14 +18,15 @@ class ControladorConsulta:
 
     @property
     def todas_consultas(self):
-        return self.__todas_consultas.get_all()
+        return self.__todas_consultas
 
     def add_consulta(self, consulta):
         if isinstance(consulta, Consulta):
             self.__todas_consultas.add(consulta.codigo, consulta)
 
     def verifica_se_tem_consulta(self, cliente):
-        for consulta in self.__todas_consultas.get_all():
+        for codigo, consulta in self.todas_consultas.get_all():
+            print(consulta)
             if consulta.cliente.cpf == cliente.cpf:
                 return True
         return False

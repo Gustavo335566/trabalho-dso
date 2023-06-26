@@ -34,7 +34,7 @@ class ControladorAgenda:
                                 horario_disponivel = True
                 try:
                     if not horario_disponivel:
-                        raise HorarioJaReservado("HORARIO INDISPONIVEL")
+                        raise HorarioJaReservado()
                     else:
                         consulta = self.__controlador_principal.controlador_consulta.cria_consulta({"cliente": cliente,
                                                                                                     "data":
@@ -61,8 +61,8 @@ class ControladorAgenda:
                 for hora, v in horarios.items():
                     if consulta == v:
                         horarios[hora] = "vago"
-                        self.__controlador_principal.controlador_usuario__historico_consultas.add(consulta.codigo, f"{consulta} removido com sucesso")
-                        self.__controlador_principal.controlador_consulta.__todas_consultas.remove(consulta.codigo)
+                        self.__controlador_principal.controlador_consulta.historico_consultas.add(consulta.codigo, f"{consulta} removido com sucesso")
+                        self.__controlador_principal.controlador_consulta.todas_consultas.remove(consulta.codigo)
                         self.__tela_agenda.mostra_mensagem("Atencao", "CONSULTA EXCLUIDA")
                         self.atualiza_agenda_usuario(self.__agenda_usuario_logado)
 
@@ -121,6 +121,7 @@ class ControladorAgenda:
     def consulta_feita(self, dados_consulta):
         usuario = self.__controlador_principal.controlador_usuario.usuario_logado
         cliente = self.__controlador_principal.controlador_cliente.pega_cliente_por_cpf(dados_consulta["cpf"])
+        print(cliente)
         if not isinstance(cliente, str):
             for data, horarios in self.agenda_usuario_logado.minhas_consultas.items():
                 for hora, consulta in horarios.items():

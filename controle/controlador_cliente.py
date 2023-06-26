@@ -65,12 +65,13 @@ class ControladorClientes:
     def exclui_cliente(self, cpf_cliente):
         cliente = self.pega_cliente_por_cpf(cpf_cliente)
         autenticacao = self.__controlador_principal.controlador_consulta.verifica_se_tem_consulta(cliente)
+        print(autenticacao)
         try:
             if not autenticacao:
                 self.__cliente_dao.remove(cliente.cpf)
                 self.__tela_clientes.mostra_mensagem("Cliente Removido", f"{cliente} removido com sucesso")
             else:
-                raise ClientePossuiConsultasException("Cliente possui consultas")
+                raise ClientePossuiConsultasException()
         except ClientePossuiConsultasException as cpce:
             print(cpce)
             self.__tela_clientes.mostra_mensagem("Atencao", cpce)
