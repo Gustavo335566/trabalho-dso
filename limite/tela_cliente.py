@@ -7,13 +7,21 @@ class TelaCliente:
         self.__controlador = controlador
         self.__window = None
 
-    def pega_novo_valor(self):
-        novo = input("Novo valor: ")
-        return novo
-
     def pega_observacao(self):
-        observacao = input("Observação: ")
-        return observacao
+        self.__window = sg.Window("Menu Clientes",
+                                  size=(420, 280)).Layout([[sg.InputText(size=(40 ,3), key="Observacao")],
+                                                           [sg.Button("Voltar"), sg.Push(), sg.Button("Enviar")]
+                                                           ])
+        while True:
+            event, value = self.__window.read()
+            if event == "Voltar" or event == sg.WIN_CLOSED:
+                break
+            elif event == "Enviar":
+                self.close()
+                return value["Observacao"]
+        self.close()
+
+
 
     def dados_cliente(self, dados_cliente):
         cpf = CPF()
@@ -37,7 +45,6 @@ class TelaCliente:
                 self.close()
             elif event == "-BT_ALTERAR_CLIENTE-":
                 self.open_altera_dados_cliente(dados_cliente)
-            print(event, value)
         self.close()
 
 

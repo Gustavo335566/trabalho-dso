@@ -15,8 +15,11 @@ class TelaAgenda:
             elif event == "-BT_CADASTRO_CONSULTA-":
                 self.__window.hide()
                 self.__controlador.inclui_consulta()
+                self.close()
             elif event == "-BT_BUSCAR-":
+                self.__window.Hide()
                 dados_consulta = self.__controlador.buscar_consulta(value["-IT_CODIGO_CONSULTA-"])
+                self.close()
         self.close()
 
     def init_components(self):
@@ -63,17 +66,19 @@ class TelaAgenda:
             elif event == "-BT_EXCLUIR_CONSULTA-":
                 self.__controlador.exclui_consulta(dados_consulta["codigo"])
                 self.close()
-            print(event, value)
+            elif event == "-BT_FINALIZAR_CONSULTA-":
+                self.__controlador.consulta_feita(dados_consulta)
+                self.close()
         self.close()
 
     def tela_dados_consulta(self, dados_consulta):
         layout = [[sg.Text(f'CODIGO:{dados_consulta["codigo"]}', size=(40, 1), font="Arial")],
                   [sg.Text(f'NOME:{dados_consulta["nome"]}', size=(40, 1), font="Arial")],
                   [sg.Text(f'CPF: {dados_consulta["cpf"]}', size=(40, 1), font="Arial")],
-                  [sg.Text(f'DATA: {dados_consulta["data"]}', size=(10, 1), font="Arial"),
+                  [sg.Text(f'DATA: {dados_consulta["data"]}', size=(14, 1), font="Arial"),
                   sg.Text(f'HORA: {dados_consulta["hora"]}', size=(10, 1), font="Arial")],
                   [sg.Button("Voltar"), sg.Button("Excluir Consulta", key="-BT_EXCLUIR_CONSULTA-"),
-                   sg.Button("Alterar Consulta")]
+                   sg.Button("Finalizar Consulta", key="-BT_FINALIZAR_CONSULTA-")]
                   ]
         self.__window = sg.Window("Menu Consulta", size=(420, 280)).Layout(layout)
 

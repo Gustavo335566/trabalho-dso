@@ -10,8 +10,8 @@ class Cliente(Pessoa):
     def historico(self):
         return self.__historico
 
-    def atualiza_atributo(self, atributo, valor):
-        setattr(self, atributo, valor)
+    def adiciona_no_historico(self, mensagem: str):
+        self.__historico.append(mensagem)
 
     def __str__(self):
         return f"Cliente {self.nome} com CPF {self.cpf}"

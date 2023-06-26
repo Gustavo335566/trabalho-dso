@@ -1,6 +1,4 @@
 from entidade.pessoa import Pessoa
-from entidade.agenda import Agenda
-from entidade.consulta import Consulta
 
 
 class Usuario(Pessoa):

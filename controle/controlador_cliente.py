@@ -2,6 +2,7 @@ from entidade.cliente import Cliente
 from limite.tela_cliente import TelaCliente
 from persistencia.cliente_dao import ClienteDAO
 import PySimpleGUI as sg
+from excecoes.cliente_possui_consultas_exception import ClientePossuiConsultasException
 
 
 class ControladorClientes:
@@ -25,9 +26,6 @@ class ControladorClientes:
             if cliente.cpf == cpf_cliente:
                 return cliente
         return False
-
-    def pega_cpf_do_cliente(self, cliente):
-        return cliente.cpf
 
     def busca_cliente(self, cpf_cliente):
         cliente = self.pega_cliente_por_cpf(cpf_cliente)
@@ -67,24 +65,15 @@ class ControladorClientes:
     def exclui_cliente(self, cpf_cliente):
         cliente = self.pega_cliente_por_cpf(cpf_cliente)
         autenticacao = self.__controlador_principal.controlador_consulta.verifica_se_tem_consulta(cliente)
-        if not autenticacao:
-            if cliente is not str:
+        try:
+            if not autenticacao:
                 self.__cliente_dao.remove(cliente.cpf)
                 self.__tela_clientes.mostra_mensagem("Cliente Removido", f"{cliente} removido com sucesso")
-        else:
-            self.__tela_clientes.mostra_mensagem("Atencao", "Ha consultas marcadas com esse cliente")
-
-    def mostra_historico_cliente(self):
-        if len(self.clientes) > 0:
-            self.lista_clientes()
-            cliente = self.pega_cliente_por_cpf()
-            if cliente is not str:
-                self.__tela_clientes.mostra_mensagem(cliente.historico)
             else:
-                self.__tela_clientes.mostra_mensagem(cliente)
-        else:
-            self.__tela_clientes.mostra_mensagem('não há clientes para se ver o historico')
-        input()
+                raise ClientePossuiConsultasException("Cliente possui consultas")
+        except ClientePossuiConsultasException as cpce:
+            print(cpce)
+            self.__tela_clientes.mostra_mensagem("Atencao", cpce)
 
     def abrir_tela(self):
         self.__tela_clientes.open()
