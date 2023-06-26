@@ -121,7 +121,7 @@ class ControladorUsuario:
 
     def pega_dados_usuario(self):
         usuario = self.__usuario_logado
-        dados_usuario = {"nome": usuario.nome, "cpf": usuario.cpf,"telefone": usuario.telefone, "sexo": usuario.sexo,
+        dados_usuario = {"nome": usuario.nome, "cpf": usuario.cpf, "telefone": usuario.telefone, "sexo": usuario.sexo,
                          "preco": usuario.preco_consulta}
         return dados_usuario
 

@@ -22,16 +22,5 @@ class TelaConsulta:
             print("Horario nao consta na agenda, coloque outro valor")
         return {"cliente": cliente, "data": datas_consulta[data], "horario": horario}
 
-    def mostra_dados_consulta(self, dados_consulta: dict):
-        print("CÓD:", dados_consulta["codigo"], end=" | ")
-        print("Nome:", dados_consulta["cliente"].nome, end=" | ")
-        print("CPF:", dados_consulta["cliente"].cpf, end=" | ")
-        print("DATA:", dados_consulta["data"])
-        print("\n")
-
-    def seleciona_consulta(self):
-        codigo = int(input("Código da consulta que deseja selecionar: "))
-        return codigo
-
     def mostra_mensagem(self, msg):
         print(msg)

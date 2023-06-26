@@ -27,36 +27,40 @@ class ControladorAgenda:
                             if v == "vago" and k == consulta.horario:
                                 horarios[k] = consulta
                 self.atualiza_agenda_usuario(self.__agenda_usuario_logado)
-                self.__tela_agenda.mostra_mensagem(f"{consulta} cadastrada com sucesso")
+                self.__tela_agenda.mostra_mensagem("Atencao", f"{consulta} cadastrada com sucesso")
                 self.__tela_agenda.open()
         else:
-            self.__tela_agenda.mostra_mensagem("Cliente nao cadastrado")
+            self.__tela_agenda.mostra_mensagem("Atencao", "Cliente nao cadastrado")
 
-    def exclui_consulta(self, usuario):
-        if self.se_tem_consultas(usuario):
-            consulta = self.__controlador_principal.controlador_consulta.exclui_consulta()
-            if consulta is not str:
-                for data, horarios in usuario.agenda.minhas_consultas.items():
-                    for hora, v in horarios.items():
-                        if consulta == v:
-                            horarios[hora] = "vago"
-                            self.__tela_agenda.mostra_mensagem("Consulta excluida")
-            else:
-                self.__tela_agenda.mostra_mensagem(consulta)
-        else:
-            self.__tela_agenda.mostra_mensagem('não há consultas para excluir')
-        input()
+    def exclui_consulta(self, codigo_consulta):
+        consulta = self.pega_consulta_por_codigo(codigo_consulta)
+        self.__controlador_principal.controlador_consulta.exclui_consulta(consulta)
+        if consulta is not str:
+            for data, horarios in self.__agenda_usuario_logado.minhas_consultas.items():
+                for hora, v in horarios.items():
+                    if consulta == v:
+                        horarios[hora] = "vago"
+                        self.__tela_agenda.mostra_mensagem("Atencao", "CONSULTA EXCLUIDA")
+                        self.atualiza_agenda_usuario(self.__agenda_usuario_logado)
 
     def pega_consulta_por_cpf(self):
         cliente = self.__controlador_principal.controlador_cliente.pega_cliente_por_cpf()
         codigo = self.__controlador_principal.controlador_consulta.pega_codigo_por_cliente(cliente)
         return codigo
 
-    def procura_consulta(self, usuario):
+    def pega_consulta_por_codigo(self, codigo):
+        for horarios in self.__agenda_usuario_logado.minhas_consultas.values():
+            for consulta in horarios.values():
+                print(consulta)
+                if not isinstance(consulta, str):
+                    if consulta.codigo == int(codigo):
+                        return consulta
+
+    def procura_consulta(self):
         if self.__controlador_principal.controlador_cliente.numero_clientes() > 0:
             cont = True
             cliente = self.__controlador_principal.controlador_cliente.pega_cliente_por_cpf()
-            for data, horarios in usuario.agenda.minhas_consultas.items():
+            for data, horarios in self.__agenda_usuario_logado.minhas_consultas.items():
                 for hora, consulta in horarios.items():
                     if not isinstance(consulta, str):
                         if consulta.cliente == cliente:
@@ -64,12 +68,19 @@ class ControladorAgenda:
                             self.__tela_agenda.imprimir_consulta(consulta)
             if cont:
                 self.__tela_agenda.mostra_mensagem('não consultas com esse cpf')
-            input()
-        elif self.se_tem_consultas(usuario) == None:
-            self.__tela_agenda.mostra_mensagem('não há consultas cadastradas')
+        elif self.se_tem_consultas(self.__controlador_principal.controlador_usuario.usuario_logado) is None:
+            self.__tela_agenda.mostra_mensagem("Atencao", 'SEM CONSULTAS CADASTRADAS')
         else:
-            self.__tela_agenda.mostra_mensagem("não há clientes cadastrados")
-        input()
+            self.__tela_agenda.mostra_mensagem("Atencao", "SEM CLIENTES CADASTRADOS")
+
+    def buscar_consulta(self, codigo_consulta: int):
+        consulta = self.pega_consulta_por_codigo(codigo_consulta)
+        if not consulta:
+            self.__tela_agenda.mostra_mensagem("Atencao", "CONSULTA NAO CADASTRADA")
+        else:
+            self.__tela_agenda.open_dados_consulta({"nome": consulta.cliente.nome, "cpf": consulta.cliente.cpf,
+                                                    "data": consulta.data, "hora": consulta.horario,
+                                                    "codigo": consulta.codigo})
 
     def mostrar_horarios(self):
         horarios_do_usuario = self.__agenda_usuario_logado.minhas_consultas
@@ -83,16 +94,13 @@ class ControladorAgenda:
                     lista_horarios[i].append(consulta.codigo)
         return lista_horarios
 
-    def se_tem_consultas(self, usuario):
+    def se_tem_consultas(self):
         cont = False
-        for k, v in usuario.agenda.minhas_consultas.items():
+        for k, v in self.__agenda_usuario_logado.minhas_consultas.items():
             for hora, disponibilidade in v.items():
                 if disponibilidade != 'vago':
                     cont = True
-        if cont:
-            return cont
-        else:
-            return None
+        return cont
 
     def abrir_tela(self):
         self.__tela_agenda.open()
@@ -104,7 +112,6 @@ class ControladorAgenda:
     def atualiza_agenda_usuario(self, minhas_consultas):
         usuario = self.__controlador_principal.controlador_usuario.usuario_logado
         self.__agenda_dao.remove(usuario.cpf)
-        print(self.__agenda_dao.get(usuario.cpf))
         self.__agenda_dao.add(usuario.cpf, minhas_consultas)
 
     def criar_agenda_usuario(self, cpf_usuario, tempo_consulta: int, ):

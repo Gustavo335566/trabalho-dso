@@ -15,18 +15,18 @@ class TelaAgenda:
             elif event == "-BT_CADASTRO_CONSULTA-":
                 self.__window.hide()
                 self.__controlador.inclui_consulta()
+            elif event == "-BT_BUSCAR-":
+                dados_consulta = self.__controlador.buscar_consulta(value["-IT_CODIGO_CONSULTA-"])
         self.close()
-
-
 
     def init_components(self):
         sg.theme("DarkBrown")
         valores = self.__controlador.mostrar_horarios()
         headings = ["Hora", "Segunda", "Terça", "Quarta", "Quinta", "Sexta"]
-        layout = [[sg.Text("AGENDA", size=(40, 1), font=("Arial Bold", 18), justification="center"),
-                   sg.InputText(size=(4,1)), sg.Button("Procurar Consulta", key="bt_procurar_consulta")],
+        layout = [[sg.Text("AGENDA", size=(40, 1), font=("Arial Bold", 18), justification="center")],
                   [sg.Table(values=valores, headings=headings, justification="center", key="-TABLE-")],
-                  [sg.Button("Voltar"), sg.Push(),
+                  [sg.Button("Voltar"), sg.Push(), sg.InputText(size=(4,1), key="-IT_CODIGO_CONSULTA-"),
+                   sg.Button("Buscar", key="-BT_BUSCAR-"),
                    sg.Button("Cadastrar Consulta", key="-BT_CADASTRO_CONSULTA-")]
                   ]
         self.__window = sg.Window("Tela Principal", size=(420, 280), finalize=True).Layout(layout)
@@ -54,17 +54,31 @@ class TelaAgenda:
                   ]
         self.__window = sg.Window("Cadastro Consulta", size=(420, 280)).Layout(layout)
 
+    def open_dados_consulta(self, dados_consulta):
+        self.tela_dados_consulta(dados_consulta)
+        while True:
+            event, value = self.__window.read()
+            if event == "Voltar" or event == sg.WIN_CLOSED:
+                break
+            elif event == "-BT_EXCLUIR_CONSULTA-":
+                self.__controlador.exclui_consulta(dados_consulta["codigo"])
+                self.close()
+            print(event, value)
+        self.close()
+
+    def tela_dados_consulta(self, dados_consulta):
+        layout = [[sg.Text(f'CODIGO:{dados_consulta["codigo"]}', size=(40, 1), font="Arial")],
+                  [sg.Text(f'NOME:{dados_consulta["nome"]}', size=(40, 1), font="Arial")],
+                  [sg.Text(f'CPF: {dados_consulta["cpf"]}', size=(40, 1), font="Arial")],
+                  [sg.Text(f'DATA: {dados_consulta["data"]}', size=(10, 1), font="Arial"),
+                  sg.Text(f'HORA: {dados_consulta["hora"]}', size=(10, 1), font="Arial")],
+                  [sg.Button("Voltar"), sg.Button("Excluir Consulta", key="-BT_EXCLUIR_CONSULTA-"),
+                   sg.Button("Alterar Consulta")]
+                  ]
+        self.__window = sg.Window("Menu Consulta", size=(420, 280)).Layout(layout)
+
     def close(self):
         self.__window.close()
 
     def mostra_mensagem(self, titulo: str, mensagem: str):
         sg.Popup(titulo, mensagem)
-
-    def imprimir(self, hora, consulta):
-        print(f"{hora} : {consulta}")
-
-    def imprimir_consulta(self, consulta):
-        print(consulta)
-
-    def mostra_mensagem(self, mensagem):
-        print(mensagem)

@@ -38,13 +38,6 @@ class ControladorConsulta:
                     return consulta.codigo
             return "CLIENTE NAO POSSUI CONSULTA"
         return "sem consultas cadastradas"
-
-    def pega_consulta_por_codigo(self, codigo):
-        for consulta in self.__historico_consultas.get_all():
-            if consulta.codigo == codigo:
-                return consulta
-        return "CONSULTA NAO EXISTENTE"
-
     def cadastrar_consulta(self):
         existe_cliente = False
         existe = True
@@ -64,29 +57,22 @@ class ControladorConsulta:
             if existe:
                 self.__tela_consulta.mostra_mensagem("!!!!! HORÁRIO INDISPONÍVEL !!!!!")
             else:
-                codigo = 1000 + len(self.__todas_consultas.get_all())
+                consultas_marcadas = []
+                for horarios in agenda.minhas_consultas.values():
+                    for consulta in horarios.values():
+                        if consulta != "vago":
+                            consultas_marcadas.append(consulta)
+                codigo = 1000 + len(consultas_marcadas)
                 consulta = Consulta(cliente, dados_consulta["data"], dados_consulta["hora"], codigo)
                 self.__historico_consultas.add(consulta.codigo, f"{dados_consulta} adicionado")
                 self.__todas_consultas.add(consulta.codigo, consulta)
                 return consulta
 
-    def lista_consultas(self):
-        for consulta in self.__historico_consultas.get_all():
-            self.__tela_consulta.mostra_dados_consulta({"codigo": consulta.codigo,
-                                                        "cliente": consulta.cliente,
-                                                        "data": consulta.data})
-
-    def exclui_consulta(self):
-        self.lista_consultas()
-        codigo = self.__tela_consulta.seleciona_consulta()
-        consulta = self.pega_consulta_por_codigo(codigo)
+    def exclui_consulta(self, consulta):
         if consulta is not str:
             self.__historico_consultas.add(consulta.codigo, f"{consulta} removido com sucesso")
             self.__tela_consulta.mostra_mensagem(f"{consulta} removido com sucesso")
             self.__todas_consultas.remove(consulta.codigo)
-            return consulta
-        else:
-            return "!!!! CONSULTA NÃO CADASTRADA !!!!"
 
     @property
     def historico_consultas(self):
